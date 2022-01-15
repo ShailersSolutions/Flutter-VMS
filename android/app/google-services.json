@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "762276627807",
+    "project_id": "vztor-9f617",
+    "storage_bucket": "vztor-9f617.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:762276627807:android:2c97c0b1cc3df0dc2da2ea",
+        "android_client_info": {
+          "package_name": "com.vztor.vmsapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "762276627807-c2gb9dgpp7g1296ui8ibikl1k7nq4117.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vztor.vmsapp",
+            "certificate_hash": "3574363e29b41c6eda809942453514464080caff"
+          }
+        },
+        {
+          "client_id": "762276627807-38go3fs00vvrfjqvsit3ed1nlpdmu63o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDKsUZJuK-4rPDGPllCgaRGlYCISdlj-40"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "762276627807-38go3fs00vvrfjqvsit3ed1nlpdmu63o.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
