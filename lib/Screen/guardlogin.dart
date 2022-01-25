@@ -207,6 +207,7 @@ class _GaurdLoginState extends State<GaurdLogin> {
                                               BaseMethod().VMSToastMassage("Please check login Credential");
                                             }else{
                                               prefs.setInt('staffId', value.id);
+                                              prefs.setString('staffName', value.name);
                                               context.read<PreInvitationFormProvider>().setStaffLoginDetails(value);
                                               Navigator.push(
                                                   context,

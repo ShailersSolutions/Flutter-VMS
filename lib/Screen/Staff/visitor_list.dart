@@ -210,7 +210,7 @@ class _VisitorListState extends State<VisitorList> {
                                             Icon(Icons.message_outlined,color: Colors.grey),
                                             Padding(
                                               padding: EdgeInsets.only(left: 8.0),
-                                              child: Text("Temp-${data.temprature ?? "NA"} . Mask-On",
+                                              child: Text("Temp - ${data.temprature ?? "NA"}",
                                                 style: TextStyle(
                                                     fontSize: 15
                                                 ),),
@@ -222,7 +222,7 @@ class _VisitorListState extends State<VisitorList> {
                                             Icon(Icons.person,color: Colors.grey),
                                             Padding(
                                               padding: EdgeInsets.only(left: 8.0),
-                                              child: Text("Allowed By ${data.officerDetail.name}",
+                                              child: Text("Allowed By ${data.officerDetail.name.capitalize()}",
                                                 style: TextStyle(
                                                     fontSize: 15
                                                 ),),
@@ -247,106 +247,109 @@ class _VisitorListState extends State<VisitorList> {
                                 ),
                                 Flexible(
                                   flex: 2,
-                                  child: Row(
-                                    children: [
-                                      Consumer<PreInvitationFormProvider>(
-                                        builder: (context, value, child) {
-                                          return GestureDetector(
-                                            onTap: (){
-                                              showDialog(
-                                                  context: context,
-                                                  barrierDismissible: false,
-                                                  builder: (BuildContext context) {
-                                                    return AlertDialog(
-                                                      title: Text("Confirm Alert"),
-                                                      content: Text("Are you sure you want to send panic alert?"),
-                                                      actions: <Widget>[
-                                                        TextButton(
-                                                          child: Text("YES"),
-                                                          onPressed: () {
-                                                            value.sendPanicAlertApi(data.id.toString()).then((val){
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                    child: Row(
+                                      children: [
+                                        Consumer<PreInvitationFormProvider>(
+                                          builder: (context, value, child) {
+                                            return GestureDetector(
+                                              onTap: (){
+                                                showDialog(
+                                                    context: context,
+                                                    barrierDismissible: false,
+                                                    builder: (BuildContext context) {
+                                                      return AlertDialog(
+                                                        title: Text("Confirm Alert"),
+                                                        content: Text("Are you sure you want to send panic alert?"),
+                                                        actions: <Widget>[
+                                                          TextButton(
+                                                            child: Text("YES"),
+                                                            onPressed: () {
+                                                              value.sendPanicAlertApi(data.id.toString()).then((val){
+                                                                Navigator.of(context).pop();
+                                                                BaseMethod().VMSToastMassage("Panic Alert send successfully");
+                                                              });
+
+                                                            },
+                                                          ),
+                                                          TextButton(
+                                                            child: Text("NO"),
+                                                            onPressed: () {
                                                               Navigator.of(context).pop();
-                                                              BaseMethod().VMSToastMassage("Panic Alert send successfully");
-                                                            });
+                                                            },
+                                                          )
+                                                        ],
+                                                      );
+                                                    });
 
-                                                          },
-                                                        ),
-                                                        TextButton(
-                                                          child: Text("NO"),
-                                                          onPressed: () {
-                                                            Navigator.of(context).pop();
-                                                          },
-                                                        )
-                                                      ],
-                                                    );
-                                                  });
-
-                                            },
-                                            child: Container(
-                                              width: width*0.3,
-                                              height: height*0.06,
-                                              color: Colors.white,
-                                              child: Row(
-                                                children: [
-                                                  Icon(Icons.add_alert_rounded,color: Colors.black87,),
-                                                  SizedBox(width: 5,),
-                                                  Text("Panic Alert",
-                                                    style: TextStyle(
-                                                        fontSize: 15,color: Colors.black54
-                                                    ),),
-                                                ],
+                                              },
+                                              child: Container(
+                                                width: width*0.28,
+                                                height: height*0.06,
+                                                color: Colors.white,
+                                                child: Row(
+                                                  children: [
+                                                    Icon(Icons.add_alert_rounded,color: Colors.black87,size: 18,),
+                                                    SizedBox(width: 5,),
+                                                    Text("Panic Alert",
+                                                      style: TextStyle(
+                                                          fontSize: 14,color: Colors.black54
+                                                      ),),
+                                                  ],
+                                                ),
                                               ),
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                      GestureDetector(
-                                        onTap: (){
-                                          value.blockVisitorApi(data.id.toString()).then((val){
-                                            BaseMethod().VMSToastMassage(value.block.msg);
-                                            setState(() {
-                                              loading = true;
-                                            });
-                                            value.currentVisitorApi().then((value){
+                                            );
+                                          },
+                                        ),
+                                        GestureDetector(
+                                          onTap: (){
+                                            value.blockVisitorApi(data.id.toString()).then((val){
+                                              BaseMethod().VMSToastMassage(value.block.msg);
                                               setState(() {
-                                                loading = false;
+                                                loading = true;
+                                              });
+                                              value.currentVisitorApi().then((value){
+                                                setState(() {
+                                                  loading = false;
+                                                });
                                               });
                                             });
-                                          });
-                                        },
-                                        child: Container(
-                                          width: width*0.31,
-                                          height: height*0.06,
+                                          },
+                                          child: Container(
+                                            width: width*0.30,
+                                            height: height*0.06,color: Colors.white,
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: [
+                                                Icon(Icons.block,color: Colors.black87,size: 18,),
+                                                SizedBox(width: 5,),
+                                                Text("Block Visitor",
+                                                  style: TextStyle(
+                                                      fontSize: 14,color: Colors.black54
+                                                  ),),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        Container(
+                                          width: width*0.29,
+                                          height: height*0.06,color: Colors.white,
                                           child: Row(
                                             mainAxisAlignment: MainAxisAlignment.center,
                                             children: [
-                                              Icon(Icons.block,color: Colors.black87),
+                                              Image.asset("images/gatePass.png",scale: 8,),
+                                              // Icon(Icons.account_balance,color: Colors.grey),
                                               SizedBox(width: 5,),
-                                              Text("Block Visitor",
+                                              Text("GatePass",
                                                 style: TextStyle(
-                                                    fontSize: 15,color: Colors.black54
+                                                    fontSize: 14,color: Colors.black54
                                                 ),),
                                             ],
                                           ),
                                         ),
-                                      ),
-                                      Container(
-                                        width: width*0.31,
-                                        height: height*0.06,
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            Image.asset("images/gatePass.png",scale: 7,),
-                                            // Icon(Icons.account_balance,color: Colors.grey),
-                                            SizedBox(width: 5,),
-                                            Text("GatePass",
-                                              style: TextStyle(
-                                                  fontSize: 15,color: Colors.black54
-                                              ),),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ],

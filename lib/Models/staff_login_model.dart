@@ -47,7 +47,10 @@ class StaffLoginModel{
       roleName = json['data']['role']['name'];
       locationName = json['data']['get_location']['name'];
       buildingName = json['data']['get_building']['name'];
-      departmentName = json['data']['get_department']['name'];
+      if(json['data']['get_department'] != null){
+        departmentName = json['data']['get_department']['name'];
+      }
+
     }
   }
 }

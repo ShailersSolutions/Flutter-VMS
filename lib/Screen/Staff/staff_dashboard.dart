@@ -1,6 +1,7 @@
 import 'package:facechk_app/ApiService/Loading.dart';
 import 'package:facechk_app/Models/upcoming_visitor_model.dart';
 import 'package:facechk_app/Provider/pre_invite_form_provider.dart';
+import 'package:facechk_app/Screen/Staff/over_staying.dart';
 import 'package:facechk_app/Screen/Staff/visitor_detail_staff.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -78,7 +79,11 @@ class _StaffDashboardState extends State<StaffDashboard> {
                     children: [
                       circle('Check In\nVisitors',value.upComingVisitor.allCheckinVisitor.toString()),
                       circle("Upcoming\nVisitors",value.upComingVisitor.upcomingVisitor.toString()),
-                      circle('Overstaying\nVisitors',value.upComingVisitor.allOverstayingVisitor.toString()),
+                      GestureDetector(
+                        onTap: (){
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => OverStaying()));
+                        },
+                        child: circle('Overstaying\nVisitors',value.upComingVisitor.allOverstayingVisitor.toString())),
                       circle('Check Out\nVisitors',value.upComingVisitor.allCheckoutVisitor.toString()),
                     ],
                   ),

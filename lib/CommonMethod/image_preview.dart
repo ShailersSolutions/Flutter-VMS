@@ -21,6 +21,7 @@ class _ImagePreviewState extends State<ImagePreview> {
     print(widget.imageUrl);
 
     return Scaffold(
+
       body: Center(
         child: Container(
           height: height*0.5,
