@@ -7,6 +7,7 @@ import 'package:facechk_app/Models/block.dart';
 import 'package:facechk_app/Models/current_visitors.dart';
 import 'package:facechk_app/Models/emergency_contact.dart';
 import 'package:facechk_app/Models/know_status_model.dart';
+import 'package:facechk_app/Models/over_staying_model.dart';
 import 'package:facechk_app/Models/pre_data_verify.dart';
 import 'package:facechk_app/Models/upcoming_visitor_model.dart';
 import 'package:facechk_app/Models/office_url_model.dart';
@@ -37,6 +38,7 @@ class PreInvitationFormProvider with ChangeNotifier{
   List<DepartmentData> departmentList = [];
   List<BuildingData> buildingList = [];
   List<PreInvitationData> preInvitationList = [];
+  List<OverStayingData> overStayingList = [];
   List<ReportData> reportList = [];
   List<AllVisitorData> allVisitorData = [];
   UpComingData upComingVisitor;
@@ -95,6 +97,11 @@ class PreInvitationFormProvider with ChangeNotifier{
 
   setPreInvitationList(List<PreInvitationData> list){
     preInvitationList = list;
+    notifyListeners();
+  }
+
+  setOverStayingList(List<OverStayingData> list){
+    overStayingList = list;
     notifyListeners();
   }
 
@@ -159,6 +166,12 @@ class PreInvitationFormProvider with ChangeNotifier{
     var res = await RequestManager().preInvitationList(staffId, officeUrlModel.id);
     setPreInvitationList(res.data);
   }
+
+  Future overStayingApi() async{
+    var res = await RequestManager().overStayingList(staffId, officeUrlModel.id);
+    setOverStayingList(res.data);
+  }
+
   Future reportListApi({String dateFrom, String dateTo}) async{
     var res = await RequestManager().reportsList(staffId, officeUrlModel.id,dateFrom: dateFrom,dateTo: dateTo);
     setReportList(res.data);
@@ -201,8 +214,8 @@ class PreInvitationFormProvider with ChangeNotifier{
     return res;
   }
 
-  Future addPreInvitationApi() async{
-    var res = await RequestManager().addPreInvitation(name.text,verifyPhone.text,email.text,staffId,
+  Future addPreInvitationApi(image) async{
+    var res = await RequestManager().addPreInvitation(image,name.text,verifyPhone.text,email.text,staffId,
         officeUrlModel.id,dateTime,locationId,buildingId,departmentId);
     setPreInvitation(res);
     print("addPreInvitationApi ${res.runtimeType}");

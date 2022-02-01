@@ -15,6 +15,20 @@ class StaffProfile extends StatefulWidget {
 class _StaffProfileState extends State<StaffProfile> {
 
   var width;
+  String companyUrl;
+
+  @override
+  void initState() {
+    getImage();
+    super.initState();
+  }
+
+  getImage()async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      companyUrl = prefs.getString('baseUrl');
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +78,7 @@ class _StaffProfileState extends State<StaffProfile> {
                       child: formProvider.staffLoginModel.avatar != null ? CircleAvatar(
                         backgroundColor: Colors.blue[500],
                         radius: 70,
-                        backgroundImage: NetworkImage("https://vztor.in/h-oneindia/storage/app/public/${formProvider.staffLoginModel.avatar}",),
+                        backgroundImage: NetworkImage("https://vztor.in/$companyUrl/storage/app/public/${formProvider.staffLoginModel.avatar}",),
                       ) :
                       Image.network(
                         "https://clipartart.com/images/facebook-profile-icon-clipart-7.png",

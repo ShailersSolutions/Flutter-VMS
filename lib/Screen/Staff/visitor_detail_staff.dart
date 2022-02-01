@@ -275,25 +275,24 @@ class _VisitorDetailStaffState extends State<VisitorDetailStaff> {
                           details(Icons.email, " : ${data.email == null ? "NA" : data.email}"),
                           details(Icons.call, " : ${data.mobile == null ? "NA" : data.mobile}"),
                           details(Icons.wc_outlined, " : ${data.gender == null ? "NA" : data.gender}"),
-                          details(Icons.account_balance_wallet,
-                              " : Document Type -> ${data.documentType == null ? "NA" : data.documentType == "dl" ? "Driving Licence" :
-                              data.documentType == "adhar_card" ? "Aadhar Card" :
-                              data.documentType == "govt_id_pf" ? "Govt Identity Proof" :
-                              data.documentType == "Pancard" ? "Pan Card" : ""}"),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              details(Icons.account_balance_wallet, " : Document ID  ${data.adharNo == null ? "NA" : data.adharNo}"),
+                              details(Icons.account_balance_wallet,
+                                  " : ${data.documentType == null ? "NA" : data.documentType == "dl" ? "Driving Licence" :
+                                  data.documentType == "adhar_card" ? "Aadhar Card" :
+                                  data.documentType == "govt_id_pf" ? "Govt Identity Proof" :
+                                  data.documentType == "Pancard" ? "Pan Card" : ""}"),
                               Padding(
                                 padding: EdgeInsets.only(right: 20),
                                 child: GestureDetector(
-                                  onTap: (){
-                                    Navigator.push(context,
-                                        MaterialPageRoute(builder: (context) => ImagePreview(
-                                          imageUrl: data.attachmant != null ? "https://vztor.in/$companyUrl/storage/app/public/${data.attachmant}" :
-                                          "https://thumbs.dreamstime.com/b/no-image-available-icon-flat-vector-no-image-available-icon-flat-vector-illustration-132482953.jpg",
-                                        )));
-                                  },
+                                    onTap: (){
+                                      Navigator.push(context,
+                                          MaterialPageRoute(builder: (context) => ImagePreview(
+                                            imageUrl: data.attachmant != null ? "https://vztor.in/$companyUrl/storage/app/public/${data.attachmant}" :
+                                            "https://thumbs.dreamstime.com/b/no-image-available-icon-flat-vector-no-image-available-icon-flat-vector-illustration-132482953.jpg",
+                                          )));
+                                    },
                                     child: Icon(Icons.visibility)),
                               ),
                             ],

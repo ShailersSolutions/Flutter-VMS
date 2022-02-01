@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
+import 'package:dio/dio.dart';
 import 'package:facechk_app/Models/BuildingModel.dart';
 import 'package:facechk_app/Models/CityModel.dart';
 import 'package:facechk_app/Models/CountryModel.dart';
@@ -15,6 +16,7 @@ import 'package:facechk_app/Models/block.dart';
 import 'package:facechk_app/Models/current_visitors.dart';
 import 'package:facechk_app/Models/emergency_contact.dart';
 import 'package:facechk_app/Models/know_status_model.dart';
+import 'package:facechk_app/Models/over_staying_model.dart';
 import 'package:facechk_app/Models/pre_data_verify.dart';
 import 'package:facechk_app/Models/upcoming_visitor_model.dart';
 import 'package:facechk_app/Models/office_url_model.dart';
@@ -23,15 +25,15 @@ import 'package:facechk_app/Models/reports_model.dart';
 import 'package:facechk_app/Models/sendOtpModel.dart';
 import 'package:facechk_app/Models/staff_login_model.dart';
 import 'package:facechk_app/Models/visitor_detail_by_id.dart';
-
+import 'package:http_parser/http_parser.dart';
 import 'package:http/http.dart' as http;
-import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class RequestManager {
 
   // static const baseUrl = "https://vztor.in/starcrest/public/api/";
   static const baseUrl = "https://vztor.in/h-oneindia/public/api/";
+  Dio dio = Dio();
 
   Future<SendOtpModel> sendOtp(mobile, purpose) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -261,7 +263,7 @@ class RequestManager {
       'building_id': buildingId,
       'company_id' : companyId,
     };
-    Response response = await http.post(Uri.parse(url),body: body);
+    var response = await http.post(Uri.parse(url),body: body);
     print(response.body);
     print(response.statusCode);
     if(response.statusCode == 200){
@@ -304,7 +306,7 @@ class RequestManager {
       "full_url" : 'https://vztor.in/$officeUrl/public',
     };
     print(body);
-    Response response = await http.post(Uri.parse(url),body: body);
+    var response = await http.post(Uri.parse(url),body: body);
     print(response.body);
     if(response.statusCode == 200){
       prefs.setString('companyData', response.body);
@@ -330,7 +332,7 @@ class RequestManager {
       "company_id" : companyId,
     };
     print(body);
-    Response response = await http.post(Uri.parse(url),body: body);
+    var response = await http.post(Uri.parse(url),body: body);
     print(response.body);
     prefs.setString('staffData', response.body);
     return StaffLoginModel.fromJson(jsonDecode(response.body));
@@ -347,7 +349,7 @@ class RequestManager {
       "company_id" : companyId,
     };
     print(body);
-    Response response = await http.post(Uri.parse(url),body: body);
+    var response = await http.post(Uri.parse(url),body: body);
     print(response.body);
     prefs.setString('guardData', response.body);
     return GuardLoginModel.fromJson(jsonDecode(response.body));
@@ -372,7 +374,7 @@ class RequestManager {
       "company_id" : companyId,
     };
     print(body);
-    Response response = await http.post(Uri.parse(url),body: body);
+    var response = await http.post(Uri.parse(url),body: body);
     print("visitor_recoard   === ${response.body}");
     return UpComingVisitor.fromJson(jsonDecode(response.body));
   }
@@ -386,7 +388,7 @@ class RequestManager {
       "company_id" : companyId,
     };
     print(body);
-    Response response = await http.post(Uri.parse(url),body: body);
+    var response = await http.post(Uri.parse(url),body: body);
     return DataVerify.fromJson(jsonDecode(response.body));
   }
   Future preVisitVerify(int userId, String image) async{
@@ -398,7 +400,7 @@ class RequestManager {
       "image" : image,
     };
     print(body);
-    Response response = await http.post(Uri.parse(url),body: body);
+    var response = await http.post(Uri.parse(url),body: body);
     return jsonDecode(response.body);
   }
 
@@ -413,7 +415,7 @@ class RequestManager {
       "guard_id" : guardId,
     };
     print(body);
-    Response response = await http.post(Uri.parse(url),body: body);
+    var response = await http.post(Uri.parse(url),body: body);
     return jsonDecode(response.body);
   }
 
@@ -427,7 +429,7 @@ class RequestManager {
       "guard_id" : guardId,
     };
     print(body);
-    Response response = await http.post(Uri.parse(url),body: body);
+    var response = await http.post(Uri.parse(url),body: body);
     return jsonDecode(response.body);
   }
 
@@ -441,7 +443,7 @@ class RequestManager {
       "company_id" : companyId,
     };
     print(body);
-    Response response = await http.post(Uri.parse(url),body: body);
+    var response = await http.post(Uri.parse(url),body: body);
 
     return CurrentVisitorModel.fromJson(jsonDecode(response.body));
   }
@@ -455,8 +457,21 @@ class RequestManager {
       "company_id" : companyId,
     };
     print(body);
-    Response response = await http.post(Uri.parse(url),body: body);
+    var response = await http.post(Uri.parse(url),body: body);
     return PreInvitationListModel.fromJson(jsonDecode(response.body));
+  }
+
+  Future<OverStayingVisitor> overStayingList(int userId, String companyId) async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var companyUrl = prefs.getString('baseUrl');
+    var url = 'https://vztor.in/$companyUrl/public/api/over_staiyng';
+    Map<String, dynamic> body = {
+      "officer_id" : userId.toString(),
+      "company_id" : companyId,
+    };
+    print(body);
+    var response = await http.post(Uri.parse(url),body: body);
+    return OverStayingVisitor.fromJson(jsonDecode(response.body));
   }
 
   Future<EmergencyContact> emergencyList(int userId, String companyId) async{
@@ -468,7 +483,7 @@ class RequestManager {
       "company_id" : companyId,
     };
     print(body);
-    Response response = await http.post(Uri.parse(url),body: body);
+    var response = await http.post(Uri.parse(url),body: body);
 
     return EmergencyContact.fromJson(jsonDecode(response.body));
   }
@@ -484,7 +499,7 @@ class RequestManager {
       "end_date": dateTo == null ? "" : dateTo
     };
     print(body);
-    Response response = await http.post(Uri.parse(url),body: body);
+    var response = await http.post(Uri.parse(url),body: body);
     return ReportListModel.fromJson(jsonDecode(response.body));
   }
 
@@ -499,7 +514,7 @@ class RequestManager {
       "status":status == null ? "" :status,
     };
     print(body);
-    Response response = await http.post(Uri.parse(url),body: body);
+    var response = await http.post(Uri.parse(url),body: body);
     return AllVisitorsListModel.fromJson(jsonDecode(response.body));
   }
 
@@ -511,7 +526,7 @@ class RequestManager {
       "user_id" : userId,
     };
     print(body);
-    Response response = await http.post(Uri.parse(url),body: body);
+    var response = await http.post(Uri.parse(url),body: body);
     return VisitorDetailByIdModel.fromJson(jsonDecode(response.body));
   }
 
@@ -525,7 +540,7 @@ class RequestManager {
       "visitor_id" : visitorId,
     };
     print(body);
-    Response response = await http.post(Uri.parse(url),body: body);
+    var response = await http.post(Uri.parse(url),body: body);
     print("response of panic alert == ${response.body}");
     return Block.fromJson(jsonDecode(response.body));
   }
@@ -539,7 +554,7 @@ class RequestManager {
       "visitor_id" : visitorId,
     };
     print(body);
-    Response response = await http.post(Uri.parse(url),body: body);
+    var response = await http.post(Uri.parse(url),body: body);
     print("response of block == ${response.body}");
     return Block.fromJson(jsonDecode(response.body));
   }
@@ -557,17 +572,22 @@ class RequestManager {
       "company_id" : compnayId,
     };
     print(body);
-    Response response = await http.post(Uri.parse(url),body: body);
+    var response = await http.post(Uri.parse(url),body: body);
     print("response of add emer == ${response.body}");
     return jsonDecode(response.body);
   }
 
-  Future<Block> addPreInvitation(String name, String mobile, String email, int userid, String companyId, var dateTime, var locId, var buildId, var deptId) async{
+  Future<Block> addPreInvitation(String imageGallery, String name,
+      String mobile, String email, int userid, String companyId, var dateTime,
+      var locId, var buildId, var deptId) async{
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var companyUrl = prefs.getString('baseUrl');
     var url = 'https://vztor.in/$companyUrl/public/api/add_preinvitation';
-    Map<String, dynamic> body = {
+
+    String fileName = imageGallery.split('/').last;
+    print("filename==  $fileName");
+    var formData = FormData.fromMap({
       "name" : name,
       "mobile" : mobile,
       "email" : email,
@@ -577,11 +597,12 @@ class RequestManager {
       "location_id": locId,
       "building_id": buildId,
       "department_id": deptId,
-    };
-    print(body);
-    Response response = await http.post(Uri.parse(url),body: body);
-    print("response of addPreInvitation == ${response.body}");
-    return Block.fromJson(jsonDecode(response.body));
+      "image": await MultipartFile.fromFile(imageGallery, filename: fileName),
+    });
+    print(formData.fields);
+    var response = await dio.post(url,data: formData);
+    print("response of addPreInvitation == ${response.data}");
+    return Block.fromJson(jsonDecode(response.data));
   }
 
   Future editEmergency(String name, String mobile, String email, int userid) async{
@@ -597,7 +618,7 @@ class RequestManager {
       "status" : "1",
     };
     print(body);
-    Response response = await http.post(Uri.parse(url),body: body);
+    var response = await http.post(Uri.parse(url),body: body);
     print("response of edit emer == ${response.body}");
     return jsonDecode(response.body);
   }
@@ -611,7 +632,7 @@ class RequestManager {
       "mobile" : mobile,
     };
     print(body);
-    Response response = await http.post(Uri.parse(url),body: body);
+    var response = await http.post(Uri.parse(url),body: body);
     print("response of my_visit_list == ${response.body}");
     return KnowStatusModel.fromJson(jsonDecode(response.body));
   }
@@ -626,7 +647,7 @@ class RequestManager {
       "visitor_id" : visitorId,
     };
     print(body);
-    Response response = await http.post(Uri.parse(url),body: body);
+    var response = await http.post(Uri.parse(url),body: body);
     print("response of approve == ${response.body}");
     return jsonDecode(response.body);
   }
@@ -641,7 +662,7 @@ class RequestManager {
       "visitor_id" : visitorId,
     };
     print(body);
-    Response response = await http.post(Uri.parse(url),body: body);
+    var response = await http.post(Uri.parse(url),body: body);
     print("response of visitor_reject == ${response.body}");
     return jsonDecode(response.body);
   }
@@ -657,7 +678,7 @@ class RequestManager {
       "rescheduled_visite_time" : dateTime,
     };
     print(body);
-    Response response = await http.post(Uri.parse(url),body: body);
+    var response = await http.post(Uri.parse(url),body: body);
     print("response of visitor_rescheduled == ${response.body}");
     return jsonDecode(response.body);
   }

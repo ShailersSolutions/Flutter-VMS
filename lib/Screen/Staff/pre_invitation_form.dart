@@ -1,12 +1,15 @@
+import 'dart:convert';
+
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:facechk_app/ApiService/BaseMethod.dart';
 import 'package:facechk_app/CommonMethod/common_form.dart';
 import 'package:facechk_app/CommonMethod/dropDown_common.dart';
 import 'package:facechk_app/Provider/pre_invite_form_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-
-
+import 'dart:io';
+import 'dart:io' as Io;
 
 class PreInvitationForm extends StatefulWidget {
   const PreInvitationForm({Key key}) : super(key: key);
@@ -18,6 +21,8 @@ class PreInvitationForm extends StatefulWidget {
 class _PreInvitationFormState extends State<PreInvitationForm> {
 
   bool loading = false;
+  PickedFile _picker;
+  String image ;
 
   @override
   void initState() {
@@ -27,6 +32,7 @@ class _PreInvitationFormState extends State<PreInvitationForm> {
     super.initState();
   }
 
+  String fileNameProfile;
   String valueChanged1 = DateTime.now().toString();
   String valueSaved1 = '';
 
@@ -61,10 +67,25 @@ class _PreInvitationFormState extends State<PreInvitationForm> {
                         ),
                       ),
                     ),
-                    CircleAvatar(
-                      backgroundColor: Colors.white,
-                      radius: 70,
-                      backgroundImage: NetworkImage("https://clipartart.com/images/facebook-profile-icon-clipart-7.png",),
+                    GestureDetector(
+                      onTap: ()async{
+                        PickedFile images = await ImagePicker()
+                            .getImage(source: ImageSource.gallery);
+                        if (images != null) {
+                          setState(() {
+                            image = images.path ;
+                          });
+                        }
+                      },
+                      child: image == null ? CircleAvatar(
+                        backgroundColor: Colors.white,
+                        radius: 70,
+                        backgroundImage: NetworkImage("https://clipartart.com/images/facebook-profile-icon-clipart-7.png",),
+                      ) : CircleAvatar(
+                        backgroundColor: Colors.white,
+                        radius: 70,
+                        backgroundImage: FileImage(File(image)),
+                      ),
                     ),
                     CommonTextForm(
                       text: "Visitor Phone",
@@ -277,7 +298,8 @@ class _PreInvitationFormState extends State<PreInvitationForm> {
                                 setState(() {
                                   loading = true;
                                 });
-                                formProvider.addPreInvitationApi().then((value){
+                                formProvider.addPreInvitationApi(image).then((value){
+                                  print(value);
                                   setState(() {
                                     loading = false;
                                   });
