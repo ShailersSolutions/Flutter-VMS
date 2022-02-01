@@ -25,6 +25,7 @@ class SendOtp extends StatefulWidget {
 class InitState extends State<SendOtp> {
   bool loading = false;
   var height, width;
+  String mobile;
   TextEditingController mobileController = TextEditingController();
   Widget build(BuildContext context) {
     return initWidget();
@@ -39,11 +40,13 @@ class InitState extends State<SendOtp> {
     SendOtpModel sendOtpModel = SendOtpModel();
     bool validateMobile() {
       String patttern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
+      mobile = mobileController.text.replaceAll(" ", "");
+      print(mobile);
       RegExp regExp = new RegExp(patttern);
       if (mobileController.text.length == 0) {
         BaseMethod().VMSToastMassage('Enter Your  Mobile No');
         return false;
-      } else if (!regExp.hasMatch(mobileController.text)) {
+      } else if (!regExp.hasMatch(mobile)) {
         BaseMethod().VMSToastMassage('Enter valid mobile No');
         return false;
       }
@@ -164,6 +167,7 @@ class InitState extends State<SendOtp> {
                                         SharedPreferences prefs = await SharedPreferences.getInstance();
                                         if (validateMobile()) {
                                           print('hlllo');
+                                          print(mobileController.text.replaceAll(" ", ""));
                                           setState(() {
                                             loading = true;
                                             print("loading true");
@@ -172,7 +176,7 @@ class InitState extends State<SendOtp> {
                                           var manager = RequestManager();
                                           var data = manager
                                               .sendOtp(
-                                              mobileController.text,
+                                              mobile,
                                               widget.mytitle.toString())
                                               .then((value) {
                                             print('response---:$value');
@@ -188,8 +192,7 @@ class InitState extends State<SendOtp> {
                                                   context,
                                                   MaterialPageRoute(
                                                       builder: (context) => OtpPage(
-                                                          mobilenumber:
-                                                          mobileController.text.toString(),
+                                                          mobilenumber: mobile,
                                                           purpose: widget.mytitle.toString())));
                                             }else if(sendOtpModel.msg == 'Mobile Number Already Registered'){
                                               BaseMethod().VMSToastMassage(sendOtpModel.msg);

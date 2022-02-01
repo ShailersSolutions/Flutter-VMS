@@ -215,40 +215,37 @@ class _ReportsState extends State<Reports> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),
-                            child: Flexible(
-                              flex: 6,
-                              child: Container(
-                                // height: height*0.134,
-                                padding: EdgeInsets.all(10),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Column(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        textWidget('Visitor Id : ',data.referCode),
-                                        textWidget('Date : ',date),
-                                        textWidget('In Time : ',inTime),
-                                        textWidget('Out Time : ',outTime),
-                                      ],
-                                    ),
-                                    Container(
-                                      width: 2,height: height*0.28,
-                                      color: Colors.black,
-                                    ),
-                                    Column(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        textWidget('Name : ',data.name),
-                                        textWidget('Location : ',data.location.name),
-                                        textWidget('Building : ',data.building.name),
-                                        textWidget('Department : ',data.officerDepartment.name),
-                                      ],
-                                    ),
-                                  ],
-                                ),
+                            child: Container(
+                              // height: height*0.134,
+                              padding: EdgeInsets.all(10),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      textWidget('Visitor Id : ',data.referCode),
+                                      textWidget('Date : ',date),
+                                      textWidget('In Time : ',inTime),
+                                      textWidget('Out Time : ',outTime),
+                                    ],
+                                  ),
+                                  Container(
+                                    width: 2,height: height*0.28,
+                                    color: Colors.black,
+                                  ),
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      textWidget('Name : ',data.name),
+                                      textWidget('Location : ',data.location.name),
+                                      textWidget('Building : ',data.building.name),
+                                      textWidget('Department : ',data.officerDepartment.name),
+                                    ],
+                                  ),
+                                ],
                               ),
                             ),
                           ),
