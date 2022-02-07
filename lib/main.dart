@@ -1,4 +1,5 @@
 import 'package:facechk_app/Provider/pre_invite_form_provider.dart';
+import 'package:facechk_app/Provider/visitor_form_provider.dart';
 import 'package:facechk_app/Screen/guardlist.dart';
 import 'package:facechk_app/Screen/login_screen.dart';
 import 'package:facechk_app/Screen/splash_screen.dart';
@@ -22,6 +23,7 @@ void main() {
   runApp(MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => PreInvitationFormProvider()),
+        ChangeNotifierProvider(create: (_) => VisitorFormProvider()),
       ],
       child: MyApp()));
 }
