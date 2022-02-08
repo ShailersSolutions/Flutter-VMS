@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:facechk_app/ApiService/BaseMethod.dart';
 import 'package:facechk_app/Models/NewRegistrationModel.dart';
 import 'package:facechk_app/Provider/pre_invite_form_provider.dart';
+import 'package:facechk_app/Provider/visitor_form_provider.dart';
 import 'package:facechk_app/RequestManager/RequestManager.dart';
 import 'package:facechk_app/Screen/Visitor_detail.dart';
 import 'package:facechk_app/Screen/visitor_screen.dart';
@@ -118,13 +119,12 @@ class InitState extends State<VisitorPage5> {
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
     PreInvitationFormProvider formProvider = Provider.of(context, listen: false);
+    VisitorFormProvider visitorFormProvider = Provider.of(context, listen: false);
     final routeData =
         ModalRoute.of(context).settings.arguments as Map<String, String>;
     print("Navigator data5 " + routeData['visitAssetInfoNameCtrl']);
 
-    return loading
-        ? Loading()
-        : Scaffold(
+    return  Scaffold(
         appBar: AppBar(
           elevation: 0,
           backgroundColor: Color(0XFF4FC3F7),
@@ -197,8 +197,8 @@ class InitState extends State<VisitorPage5> {
                                 }
                                 setState(() {
                                   takenVaccineType = val;
-
-                                  // print("takenVaccineType$takenVaccineType");
+                                  visitorFormProvider.takenVaccine = takenVaccineType;
+                                  print("takenVaccineType  $takenVaccineType");
                                 });
                               },
                             ),
@@ -250,7 +250,9 @@ class InitState extends State<VisitorPage5> {
                                     }else if(currentVaccineDose == "Booster Dose"){
                                       currentVaccineDoseValue = "3";
                                     }
-                                    // print("selecteddose$currentVaccineDose");
+                                    print("selecteddose  $currentVaccineDoseValue");
+                                    visitorFormProvider.doseOfVaccine = currentVaccineDose;
+                                    visitorFormProvider.doseOfVaccineValue = currentVaccineDoseValue;
                                   });
                                 },
                               ),
@@ -296,6 +298,7 @@ class InitState extends State<VisitorPage5> {
                                 onChanged: (String val) {
                                   setState(() {
                                     currentVaccineCompany = val;
+                                    visitorFormProvider.vaccineName = currentVaccineCompany;
                                     // print("selelctedcompany$currentVaccineCompany");
                                   });
                                 },
@@ -340,6 +343,7 @@ class InitState extends State<VisitorPage5> {
                               onChanged: (String val) {
                                 setState(() {
                                   currentSymptomsType = val;
+                                  visitorFormProvider.currentlyExperiencing = currentSymptomsType;
                                 });
                               },
                             ),
@@ -383,6 +387,7 @@ class InitState extends State<VisitorPage5> {
                               onChanged: (String val) {
                                 setState(() {
                                   dayTravelledType = val ?? "";
+                                  visitorFormProvider.travelled = dayTravelledType;
                                 });
                               },
                             ),
@@ -426,6 +431,7 @@ class InitState extends State<VisitorPage5> {
                               onChanged: (String val) {
                                 setState(() {
                                   touchCovidPatientType = val ;
+                                  visitorFormProvider.covidPatient = touchCovidPatientType;
                                 });
                               },
                             ),
@@ -470,7 +476,9 @@ class InitState extends State<VisitorPage5> {
                                   SizedBox(
                                     width: 15,
                                   ),
-                                  RaisedButton(
+                                  loading
+                                      ? Loading()
+                                      :RaisedButton(
                                     color: Colors.blue[900],
                                     onPressed: () {
                                       FocusManager.instance.primaryFocus.unfocus();
@@ -485,8 +493,7 @@ class InitState extends State<VisitorPage5> {
                                         // print(
                                         //     "temperature " + covidBodyTempCtrl.text.toString());
 
-                                        NewRegistrationModel newRegistrationModel =
-                                        NewRegistrationModel();
+                                        NewRegistrationModel newRegistrationModel = NewRegistrationModel();
 
                                         setState(() {
                                           loading = true;
@@ -500,8 +507,7 @@ class InitState extends State<VisitorPage5> {
                                         String visitorAdhdhar = routeData['visitorAdhdhar'];
                                         String purposeVisitType = routeData['purposeVisitType'];
                                         String genderType = routeData['genderType'];
-                                        String visitDurationType =
-                                        routeData['visitDurationType'];
+                                        String visitDurationType = routeData['visitDurationType'];
                                         String fileName = routeData['fileName'];
                                         String officerType = routeData['officerType'];
 
@@ -629,8 +635,7 @@ class InitState extends State<VisitorPage5> {
                                             Navigator.pushReplacement(
                                                 context,
                                                 MaterialPageRoute(
-                                                    builder: (context) => VisitorScreen(
-                                                    )));
+                                                    builder: (context) => VisitorScreen()));
                                           }
                                         });
 

@@ -4,6 +4,7 @@ import 'package:facechk_app/Constants/RoutePaths.dart';
 import 'package:facechk_app/Models/OtpVerifyModel.dart';
 import 'package:facechk_app/Models/sendOtpModel.dart';
 import 'package:facechk_app/Provider/pre_invite_form_provider.dart';
+import 'package:facechk_app/Provider/visitor_form_provider.dart';
 import 'package:facechk_app/RequestManager/RequestManager.dart';
 import 'package:facechk_app/Screen/KnowStatusList.dart';
 import 'package:facechk_app/Screen/visitor_forms.dart';
@@ -135,25 +136,34 @@ class InitState extends State<OtpPage> {
                                       // print('response:$value');
                                       otpverifymodel = value;
                                       print('response:${otpverifymodel.msg}');
+                                      var visitor = Provider.of<VisitorFormProvider>(context,listen: false);
                                       if (otpverifymodel.msg == 'Otp Verify') {
                                         if (otpverifymodel.purpose == 'New_visit') {
                                           BaseMethod()
                                               .VMSToastMassage('${otpverifymodel.purpose}');
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) => VisitorForms(
-                                                      purpose: otpverifymodel.purpose,
-                                                      mobileNo:
-                                                      widget.mobilenumber.toString())));
-                                        } else if (otpverifymodel.purpose == 're_visit') {
+                                          visitor.clearRevisitData().then((value) {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) => VisitorForms(
+                                                        purpose: otpverifymodel.purpose,
+                                                        mobileNo:
+                                                        widget.mobilenumber.toString())));
+                                          });
+
+                                        }
+                                        else if (otpverifymodel.purpose == 're_visit') {
                                           BaseMethod()
                                               .VMSToastMassage('${otpverifymodel.purpose}');
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) => VisitorForms(
-                                                      purpose: otpverifymodel.purpose)));
+
+                                          visitor.setRevisitData(otpverifymodel.data).then((value) {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) => VisitorForms(
+                                                        purpose: otpverifymodel.purpose)));
+                                          });
+
                                         } else if (otpverifymodel.purpose ==
                                             'know_status') {
                                           BaseMethod()
@@ -312,6 +322,7 @@ class InitState extends State<OtpPage> {
                                   otpController.text.toString(),
                                   widget.purpose.toString())
                                   .then((value) {
+                                var visitor = Provider.of<VisitorFormProvider>(context,listen: false);
                                 print('response:$value');
                                 otpverifymodel = value;
                                 print('response:${otpverifymodel.msg}');
@@ -322,19 +333,24 @@ class InitState extends State<OtpPage> {
 
                                   if (otpverifymodel.purpose == 'New_visit') {
                                     BaseMethod().VMSToastMassage('${otpverifymodel.purpose}');
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => VisitorForms(
-                                                purpose: otpverifymodel.purpose,
-                                                mobileNo: widget.mobilenumber.toString())));
+                                    visitor.clearRevisitData().then((value) {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => VisitorForms(
+                                                  purpose: otpverifymodel.purpose,
+                                                  mobileNo: widget.mobilenumber.toString())));
+                                    });
+
                                   } else if (otpverifymodel.purpose == 're_visit') {
                                     BaseMethod().VMSToastMassage('${otpverifymodel.purpose}');
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => VisitorForms(
-                                                purpose: otpverifymodel.purpose)));
+                                    visitor.setRevisitData(otpverifymodel.data).then((value){
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => VisitorForms(
+                                                  purpose: otpverifymodel.purpose)));
+                                    });
                                   } else if (otpverifymodel.purpose == 'know_status') {
                                     // Navigator.of(context).pushAndRemoveUntil(
                                     //     MaterialPageRoute(

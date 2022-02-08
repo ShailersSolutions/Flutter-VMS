@@ -4,6 +4,7 @@ import 'package:facechk_app/ApiService/BaseMethod.dart';
 import 'package:facechk_app/Constants/ApiConstants.dart';
 import 'package:facechk_app/Constants/RoutePaths.dart';
 import 'package:facechk_app/Provider/pre_invite_form_provider.dart';
+import 'package:facechk_app/Provider/visitor_form_provider.dart';
 import 'package:facechk_app/Screen/visitor_page2.dart';
 import 'package:facechk_app/Screen/visitor_page4.dart';
 import 'package:file_picker/file_picker.dart';
@@ -203,6 +204,7 @@ class InitState extends State<VisitorPage3> {
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
     PreInvitationFormProvider formProvider = Provider.of(context, listen: false);
+    VisitorFormProvider visitorFormProvider = Provider.of(context, listen: false);
     return Scaffold(
         appBar: AppBar(
           elevation: 0,
@@ -237,7 +239,7 @@ class InitState extends State<VisitorPage3> {
                           margin: EdgeInsets.only(left: 20, right: 20),
                           alignment: Alignment.center,
                           child: TextFormField(
-                            controller: organizationNameCtrl,
+                            controller: visitorFormProvider.orgName,
                             decoration: InputDecoration(
                                 border: OutlineInputBorder(),
                                 labelText: "Organization Name:"),
@@ -278,6 +280,7 @@ class InitState extends State<VisitorPage3> {
                               onChanged: (String val) {
                                 setState(() {
                                   org_country_id = val;
+                                  visitorFormProvider.orgCountry = org_country_id;
                                   org_state_id = null;
                                   org_city_id = null;
                                   _getStateList(val);
@@ -321,7 +324,7 @@ class InitState extends State<VisitorPage3> {
                               onChanged: (String vals) {
                                 setState(() {
                                   org_state_id = vals ;
-
+                                  visitorFormProvider.orgState = org_state_id;
                                   _getCityList(vals);
                                 });
                               },
@@ -363,6 +366,7 @@ class InitState extends State<VisitorPage3> {
                               onChanged: (String val) {
                                 setState(() {
                                   org_city_id = val ;
+                                  visitorFormProvider.orgCity = org_city_id;
                                 });
                               },
                             ),
@@ -375,7 +379,7 @@ class InitState extends State<VisitorPage3> {
                           margin: EdgeInsets.only(left: 20, right: 20),
                           alignment: Alignment.center,
                           child: TextFormField(
-                            controller: organizationpinCtrl,
+                            controller: visitorFormProvider.orgPinCode,
                             decoration: InputDecoration(
                                 border: OutlineInputBorder(),
                                 labelText: "Organization Pin Code:"),
@@ -538,17 +542,17 @@ class InitState extends State<VisitorPage3> {
                                           'state_id': widget.state_id,
                                           'city_id': widget.city_id,
                                           'visitorVehicle': widget.visitorVehicle,
-                                          'organizationpinCtrl': organizationpinCtrl.text.toString(),
+                                          'organizationpinCtrl': visitorFormProvider.orgPinCode.text.toString(),
                                           'visitorPinNo': widget.visitorPinNo,
                                           'visitorAddress': widget.visitorAddress,
                                           'visitorAddress2': widget.visitorAddress2,
                                           'documentType': widget.documentType,
                                           'genderType': widget.genderType,
                                           'fileName': widget.fileName,
-                                          'organizationNameCtrl': organizationNameCtrl.text.toString(),
-                                          'org_country_id': org_country_id.toString(),
-                                          'org_state_id': org_state_id.toString(),
-                                          'org_city_id': org_city_id.toString(),
+                                          'organizationNameCtrl': visitorFormProvider.orgName.text.toString(),
+                                          'org_country_id': visitorFormProvider.orgCountry.toString(),
+                                          'org_state_id': visitorFormProvider.orgState.toString(),
+                                          'org_city_id': visitorFormProvider.orgCity.toString(),
                                           'fileNameProfile': fileNameProfile.toString(),
                                           'visitorAdhdhar': widget.visitorAdhdhar,
                                           'dateTime': widget.valueChanged1.toString(),

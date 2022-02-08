@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:facechk_app/Provider/pre_invite_form_provider.dart';
+import 'package:facechk_app/Provider/visitor_form_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -31,6 +32,7 @@ class InitState extends State<VisitorPage4> {
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
     PreInvitationFormProvider formProvider = Provider.of(context, listen: false);
+    VisitorFormProvider visitorFormProvider = Provider.of(context, listen: false);
     final routeData =
         ModalRoute.of(context).settings.arguments as Map<String, String>;
     print("Navigator organizationNameCtrl $routeData['organizationNameCtrl']");
@@ -75,7 +77,7 @@ class InitState extends State<VisitorPage4> {
                         margin: EdgeInsets.only(left: 20, right: 20),
                         alignment: Alignment.center,
                         child: TextFormField(
-                          controller: visitAssetInfoNameCtrl,
+                          controller: visitorFormProvider.assetName,
                           decoration: InputDecoration(
                               border: OutlineInputBorder(),
                               labelText: " Asset Name:"),
@@ -88,7 +90,7 @@ class InitState extends State<VisitorPage4> {
                         margin: EdgeInsets.only(left: 20, right: 20),
                         alignment: Alignment.center,
                         child: TextFormField(
-                          controller: visitAssetInfoSerialNoCtrl,
+                          controller: visitorFormProvider.serialNum,
                           decoration: InputDecoration(
                               border: OutlineInputBorder(),
                               labelText: "Serial Number:"),
@@ -101,7 +103,7 @@ class InitState extends State<VisitorPage4> {
                         margin: EdgeInsets.only(left: 20, right: 20),
                         alignment: Alignment.center,
                         child: TextFormField(
-                          controller: visitAssetInfoBrandCtrl,
+                          controller: visitorFormProvider.assetBrand,
                           decoration: InputDecoration(
                               border: OutlineInputBorder(),
                               labelText: " Asset Brand:"),
@@ -114,7 +116,7 @@ class InitState extends State<VisitorPage4> {
                         margin: EdgeInsets.only(left: 20, right: 20),
                         alignment: Alignment.center,
                         child: TextFormField(
-                          controller: visitAssetInfoPanDriverCtrl,
+                          controller: visitorFormProvider.penDrive,
                           decoration: InputDecoration(
                               border: OutlineInputBorder(),
                               labelText: "No.Of Pen Drive:"),
@@ -132,7 +134,7 @@ class InitState extends State<VisitorPage4> {
                         margin: EdgeInsets.only(left: 20, right: 20),
                         alignment: Alignment.center,
                         child: TextFormField(
-                          controller: visitAssetInfoHardDiskCtrl,
+                          controller: visitorFormProvider.hardDisk,
                           decoration: InputDecoration(
                               border: OutlineInputBorder(),
                               labelText: "No. Of Hard Disk:"),
@@ -203,15 +205,15 @@ class InitState extends State<VisitorPage4> {
                                       'dateTime': routeData['dateTime'],
 
                                       'visitAssetInfoNameCtrl':
-                                      visitAssetInfoNameCtrl.text.toString(),
+                                       visitorFormProvider.assetName.text.toString(),
                                       'visitAssetInfoSerialNoCtrl':
-                                      visitAssetInfoSerialNoCtrl.text.toString(),
+                                       visitorFormProvider.serialNum.text.toString(),
                                       'visitAssetInfoBrandCtrl':
-                                      visitAssetInfoBrandCtrl.text.toString(),
+                                       visitorFormProvider.assetBrand.text.toString(),
                                       'visitAssetInfoPanDriverCtrl':
-                                      visitAssetInfoPanDriverCtrl.text.toString(),
+                                       visitorFormProvider.penDrive.text.toString(),
                                       'visitAssetInfoHardDiskCtrl':
-                                      visitAssetInfoHardDiskCtrl.text.toString(),
+                                       visitorFormProvider.hardDisk.text.toString(),
                                     });
                                   },
                                   shape: RoundedRectangleBorder(

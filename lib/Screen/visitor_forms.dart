@@ -7,6 +7,7 @@ import 'package:facechk_app/Models/CityModel.dart';
 import 'package:facechk_app/Models/CountryModel.dart';
 import 'package:facechk_app/Models/StateModel.dart';
 import 'package:facechk_app/Provider/pre_invite_form_provider.dart';
+import 'package:facechk_app/Provider/visitor_form_provider.dart';
 import 'package:facechk_app/Screen/visitor_page2.dart';
 import 'package:facechk_app/Screen/visitor_screen.dart';
 import 'package:file_picker/file_picker.dart';
@@ -129,15 +130,16 @@ class InitState extends State<VisitorForms> {
 
 
   bool validatedetail() {
+    VisitorFormProvider visitorProvider = Provider.of(context, listen: false);
     String patttern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
     RegExp regExp = new RegExp(patttern);
-    if (visitorNameCtrl.text.isEmpty) {
+    if (visitorProvider.visitorName.text.isEmpty) {
       BaseMethod().VMSToastMassage('Enter Visitor Name');
       return false;
-    } else if (visitorPhoneCtrl.text.length == 0) {
+    } else if (visitorProvider.visitorPhone.text.length == 0) {
       BaseMethod().VMSToastMassage('Enter Mobile No');
       return false;
-    } else if (!regExp.hasMatch(visitorPhoneCtrl.text)) {
+    } else if (!regExp.hasMatch(visitorProvider.visitorPhone.text)) {
       BaseMethod().VMSToastMassage('Enter valid mobile No');
       return false;
     } else if (genderType == null) {
@@ -212,14 +214,16 @@ class InitState extends State<VisitorForms> {
 
   getMobile() async{
     SharedPreferences pref = await SharedPreferences.getInstance();
+    VisitorFormProvider visitorProvider = Provider.of(context, listen: false);
     setState(() {
-      visitorPhoneCtrl.text = pref.getString('mobile');
+      visitorProvider.visitorPhone.text = pref.getString('mobile');
     });
   }
 
   @override
   void initState() {
     super.initState();
+    print(genderType);
     _getCountryList();
     getMobile();
   }
@@ -228,6 +232,7 @@ class InitState extends State<VisitorForms> {
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
     PreInvitationFormProvider formProvider = Provider.of(context, listen: false);
+    VisitorFormProvider visitorProvider = Provider.of(context, listen: false);
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
@@ -281,7 +286,8 @@ class InitState extends State<VisitorForms> {
                             margin: EdgeInsets.only(left: 20, right: 20),
                             alignment: Alignment.center,
                             child: TextFormField(
-                              controller: visitorNameCtrl,
+                              // controller: visitorNameCtrl,
+                              controller: visitorProvider.visitorName,
                               decoration: InputDecoration(
                                   border: OutlineInputBorder(),
                                   labelText: " Visitor Name:*"),
@@ -297,7 +303,7 @@ class InitState extends State<VisitorForms> {
                                   margin: EdgeInsets.only(left: 20, right: 20),
                                   alignment: Alignment.center,
                                   child: TextFormField(
-                                    controller: visitorEmailCtrl,
+                                    controller: visitorProvider.visitorEmail,
                                     decoration: InputDecoration(
                                         border: OutlineInputBorder(),
                                         labelText: "Visitor Email:"),
@@ -316,7 +322,7 @@ class InitState extends State<VisitorForms> {
                                   margin: EdgeInsets.only(left: 20, right: 20),
                                   alignment: Alignment.center,
                                   child: TextFormField(
-                                    controller: visitorPhoneCtrl,
+                                    controller: visitorProvider.visitorPhone,
                                     // enabled: false,
 
                                     decoration: InputDecoration(
@@ -370,6 +376,9 @@ class InitState extends State<VisitorForms> {
                                 onChanged: (Gender val) {
                                   setState(() {
                                     genderType = val;
+                                    visitorProvider.gender = genderType;
+                                    print(visitorProvider.gender);
+                                    print(genderId(visitorProvider.gender));
                                   });
                                 },
                               ),
@@ -413,6 +422,7 @@ class InitState extends State<VisitorForms> {
                                     onChanged: (Document val) {
                                       setState(() {
                                       documentType = val;
+                                      visitorProvider.docType = documentType;
                                       });
                                     }),
                               )),
@@ -423,7 +433,7 @@ class InitState extends State<VisitorForms> {
                             margin: EdgeInsets.only(left: 20, right: 20),
                             alignment: Alignment.center,
                             child: TextFormField(
-                              controller: visitorAdhdharCtrl,
+                              controller: visitorProvider.docId,
                               decoration: InputDecoration(
                                   border: OutlineInputBorder(),
                                   labelText: "Document Id Number:"),
@@ -563,6 +573,7 @@ class InitState extends State<VisitorForms> {
                                     onChanged: (VisitDuration val) {
                                       setState(() {
                                         visitDurationType = val ?? "";
+                                        visitorProvider.visitDuration = visitDurationType;
                                       });
                                     }),
                               )),
@@ -598,6 +609,7 @@ class InitState extends State<VisitorForms> {
                                     onChanged: (PurposeVisitType val) {
                                       setState(() {
                                       purposeVisitType = val ?? "";
+                                      visitorProvider.purposeOfVisit = purposeVisitType;
                                       });
                                     }),
                               )),
@@ -635,7 +647,8 @@ class InitState extends State<VisitorForms> {
                                     }).toList(),
                                     onChanged: (Vehicle val) {
                                       setState(() {
-                                      vehicleType = val ?? "";
+                                        vehicleType = val ?? "";
+                                        visitorProvider.vehicleType = vehicleType;
                                       });
                                     }),
                               )),
@@ -646,7 +659,7 @@ class InitState extends State<VisitorForms> {
                             margin: EdgeInsets.only(left: 20, right: 20),
                             alignment: Alignment.center,
                             child: TextFormField(
-                              controller: visitorVehicleCtrl,
+                              controller: visitorProvider.vehicleRegNum,
                               decoration: InputDecoration(
                                   border: OutlineInputBorder(),
                                   hintText: "DL-8C-0556",
@@ -684,9 +697,10 @@ class InitState extends State<VisitorForms> {
                                   onChanged: (newVal) {
                                     setState(() {
                                       country_id = newVal;
+                                      visitorProvider.country = country_id;
                                       state_id = null;
                                       city_id = null;
-                                      print('selectcountry---$country_id');
+                                      print('selectcountry---${visitorProvider.country}');
                                       _getStateList(country_id);
                                     });
                                   },
@@ -717,10 +731,11 @@ class InitState extends State<VisitorForms> {
                                   onChanged: (val) {
                                     setState(() {
                                       state_id = val;
+                                      visitorProvider.state = state_id;
                                       city_id = null;
                                       print('selectstate---$state_id');
                                       _getCityList(val);
-                                      print(val);
+                                      print(visitorProvider.state);
                                     });
                                   },
                                   items: stateDrop?.map((ee) {
@@ -760,7 +775,8 @@ class InitState extends State<VisitorForms> {
                                   onChanged: (String valCity) {
                                     setState(() {
                                       city_id = valCity;
-                                      print(valCity);
+                                      visitorProvider.city = city_id;
+                                      print(visitorProvider.city);
                                     });
                                   },
                                   items: cityDrop?.map((e) {
@@ -787,7 +803,7 @@ class InitState extends State<VisitorForms> {
                                   margin: EdgeInsets.only(left: 20, right: 20),
                                   alignment: Alignment.center,
                                   child: TextFormField(
-                                    controller: visitorPinNoCtrl,
+                                    controller: visitorProvider.pinCode,
                                     decoration: InputDecoration(
                                         border: OutlineInputBorder(), labelText: "Pincode:"),
                                     keyboardType: TextInputType.number,
@@ -810,7 +826,7 @@ class InitState extends State<VisitorForms> {
                                   margin: EdgeInsets.only(left: 20, right: 20),
                                   alignment: Alignment.center,
                                   child: TextFormField(
-                                    controller: visitorAddressCtrl,
+                                    controller: visitorProvider.address1,
                                     decoration: InputDecoration(
                                         border: OutlineInputBorder(), labelText: "Address-1:"),
                                   ),
@@ -828,7 +844,7 @@ class InitState extends State<VisitorForms> {
                                   margin: EdgeInsets.only(left: 20, right: 20),
                                   alignment: Alignment.center,
                                   child: TextFormField(
-                                    controller: visitorAddress2Ctrl,
+                                    controller: visitorProvider.address2,
                                     decoration: InputDecoration(
                                         border: OutlineInputBorder(), labelText: "Address-2:"),
                                   ),
@@ -866,30 +882,23 @@ class InitState extends State<VisitorForms> {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) => VisitorPage2(
-                                                    visitorName: visitorNameCtrl.text.toString(),
-                                                    visitorEmail:
-                                                    visitorEmailCtrl.text.toString(),
-                                                    visitorPhone:
-                                                    visitorPhoneCtrl.text.toString(),
-                                                    genderType: genderId(genderType),
-                                                    documentType: documentId(documentType),
-                                                    visitorAdhdhar:
-                                                    visitorAdhdharCtrl.text.toString(),
+                                                    visitorName: visitorProvider.visitorName.text.toString(),
+                                                    visitorEmail: visitorProvider.visitorEmail.text.toString(),
+                                                    visitorPhone: visitorProvider.visitorPhone.text.toString(),
+                                                    genderType: genderId(visitorProvider.gender),
+                                                    documentType: documentId(visitorProvider.docType),
+                                                    visitorAdhdhar: visitorProvider.docId.text.toString(),
                                                     fileName: fileNameProfile.toString(),
-                                                    visitDurationType: visitId(visitDurationType),
-                                                    purposeVisitType: purposeId(purposeVisitType),
-                                                    vehicleType: vehicleId(vehicleType),
-                                                    visitorVehicle:
-                                                    visitorVehicleCtrl.text.toString(),
+                                                    visitDurationType: visitId(visitorProvider.visitDuration),
+                                                    purposeVisitType: purposeId(visitorProvider.purposeOfVisit),
+                                                    vehicleType: vehicleId(visitorProvider.vehicleType),
+                                                    visitorVehicle: visitorProvider.vehicleRegNum.text.toString(),
                                                     country_id: country_id,
                                                     state_id: state_id,
                                                     city_id: city_id,
-                                                    visitorPinNo:
-                                                    visitorPinNoCtrl.text.toString(),
-                                                    visitorAddress:
-                                                    visitorAddressCtrl.text.toString(),
-                                                    visitorAddress2:
-                                                    visitorAddress2Ctrl.text.toString(),
+                                                    visitorPinNo: visitorProvider.pinCode.text.toString(),
+                                                    visitorAddress: visitorProvider.address1.text.toString(),
+                                                    visitorAddress2: visitorProvider.address2.text.toString(),
                                                   )));
                                         }
                                       },

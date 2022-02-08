@@ -6,6 +6,7 @@ import 'package:facechk_app/Constants/ApiConstants.dart';
 import 'package:facechk_app/Constants/RoutePaths.dart';
 import 'package:facechk_app/Models/LocationModel.dart';
 import 'package:facechk_app/Provider/pre_invite_form_provider.dart';
+import 'package:facechk_app/Provider/visitor_form_provider.dart';
 import 'package:facechk_app/Screen/visitor_forms.dart';
 import 'package:facechk_app/Screen/visitor_page3.dart';
 import 'package:flutter/cupertino.dart';
@@ -236,6 +237,8 @@ class InitState extends State<VisitorPage2> {
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
     PreInvitationFormProvider formProvider = Provider.of(context, listen: false);
+    VisitorFormProvider visitorFormProvider = Provider.of(context, listen: false);
+
     return Scaffold(
         appBar: AppBar(
           elevation: 0,
@@ -315,6 +318,7 @@ class InitState extends State<VisitorPage2> {
                                   onChanged: (String val) {
                                     setState(() {
                                       location_id = val;
+                                      visitorFormProvider.location = location_id;
                                       buildingType = null;
                                       department_id = null;
                                       officerType = null;
@@ -359,6 +363,7 @@ class InitState extends State<VisitorPage2> {
                                   onChanged: (String val) {
                                     setState(() {
                                       buildingType = val;
+                                      visitorFormProvider.building = buildingType;
                                       department_id = null;
                                       officerType = null;
                                       _getDepartmentList(val);
@@ -403,6 +408,7 @@ class InitState extends State<VisitorPage2> {
                                   onChanged: (String val) {
                                     setState(() {
                                       department_id = val;
+                                      visitorFormProvider.department = department_id;
                                       officerType = null;
                                       _getOfficerList(val);
                                     });
@@ -443,6 +449,7 @@ class InitState extends State<VisitorPage2> {
                                   onChanged: (String val) {
                                     setState(() {
                                       officerType = val ?? "";
+                                      visitorFormProvider.officer = officerType;
                                     });
                                   }),
                             )),
@@ -486,8 +493,8 @@ class InitState extends State<VisitorPage2> {
                                 setState(() {
                                   valueChanged1 = val;
                                   valueChanged2 = DateFormat("yyyy-MM-ddTHH:mm:ss").format(DateTime.parse(valueChanged1));
-                                  print(valueChanged1);
-                                  print(valueChanged2);
+                                  visitorFormProvider.dateTime = valueChanged2;
+                                  print(visitorFormProvider.dateTime);
                                 });
                               },
                               // validator: (val) {
