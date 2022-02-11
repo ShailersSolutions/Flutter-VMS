@@ -603,7 +603,8 @@ class InitState extends State<VisitorPage5> {
                                           fileNameProfile != null ? fileNameProfile : "",
                                         )
                                             .then((value) {
-                                          print('response:$value');
+                                          print('response:${value.message}');
+                                          print('response:${value.status}');
                                           newRegistrationModel = value;
                                           print('response:${newRegistrationModel.message}');
 
@@ -616,14 +617,12 @@ class InitState extends State<VisitorPage5> {
                                             // // setState(() {
                                             // //   loading = false;
                                             // // });
-                                            BaseMethod().VMSToastMassage(
-                                                '${newRegistrationModel.message}');
+                                            BaseMethod().VMSToastMassage('${newRegistrationModel.message}');
 
                                             Navigator.pushReplacement(
                                                 context,
                                                 MaterialPageRoute(
-                                                    builder: (context) => VisitorScreen(
-                                                        )));
+                                                    builder: (context) => VisitorScreen()));
                                           } else if (newRegistrationModel.status == "failed") {
                                             print(
                                                 'failed status msg : ${newRegistrationModel.message}');

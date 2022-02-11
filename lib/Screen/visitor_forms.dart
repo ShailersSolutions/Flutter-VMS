@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:facechk_app/Constants/ApiConstants.dart';
 import 'package:facechk_app/Constants/RoutePaths.dart';
@@ -53,16 +54,17 @@ class InitState extends State<VisitorForms> {
   bool disableDropDown = true;
   bool disableDropDownthird = true;
   var height,width;
-  String selectGender = "Select Gender*",
+  var selectGender,
       selectDoc = "Select Document*",
   selectVehicle = "Select Vehicle",
   selectVisitDuration = "Select Visit Duration*",
   selectPurposeVisit = "Select Purpose of Visit*";
 
   // String fileName = 'Attached Documents';
+  String attachmentImage = 'Select Image*';
   String fileNameProfile = 'Select Image*';
   String file_name = "Upload Your Document";
-  var genderType;
+  Gender genderType;
   var documentType;
   var vehicleType;
   var visitDurationType;
@@ -142,7 +144,7 @@ class InitState extends State<VisitorForms> {
     } else if (!regExp.hasMatch(visitorProvider.visitorPhone.text)) {
       BaseMethod().VMSToastMassage('Enter valid mobile No');
       return false;
-    } else if (genderType == null) {
+    } else if (visitorProvider.gender == null) {
       BaseMethod().VMSToastMassage('Select Gender Type');
       return false;
     } else if (documentType == null) {
@@ -156,11 +158,11 @@ class InitState extends State<VisitorForms> {
       BaseMethod().VMSToastMassage("Select Image Mode");
 
       return false;
-    } else if (imageSelectProfile == 'Camera' && fileNameProfile.isEmpty) {
+    } else if (imageSelectProfile == 'Camera' && attachmentImage.isEmpty) {
       BaseMethod().VMSToastMassage("Capture Image first");
 
       return false;
-    } else if (imageSelectProfile == 'Gallery' && fileNameProfile.isEmpty) {
+    } else if (imageSelectProfile == 'Gallery' && attachmentImage.isEmpty) {
       BaseMethod().VMSToastMassage("Select Image first");
       return false;
     } else if (visitDurationType == null) {
@@ -223,7 +225,16 @@ class InitState extends State<VisitorForms> {
   @override
   void initState() {
     super.initState();
-    print(genderType);
+    VisitorFormProvider visitorProvider = Provider.of(context, listen: false);
+    print("gender  ${widget.purpose}");
+    if(widget.purpose == "re_visit"){
+      genderType = visitorProvider.gender;
+      selectGender = genderName(visitorProvider.gender == "male" ? Gender.Male : visitorProvider.gender == "female" ? Gender.Female : Gender.Other).toString();
+    }else{
+      selectGender = "Select Gender*";
+    }
+    // visitorProvider.gender == "" ? selectGender = "Select Gender*" : selectGender = genderName(visitorProvider.gender);
+    // visitorProvider.gender == "" ? "" : visitorProvider.gender;
     _getCountryList();
     getMobile();
   }
@@ -511,6 +522,7 @@ class InitState extends State<VisitorForms> {
                                       PickedFile image = await ImagePicker()
                                           .getImage(source: ImageSource.gallery);
                                       if (image != null) {
+                                        attachmentImage = image.path;
                                         final bytes = Io.File(image.path).readAsBytesSync();
                                         String img64 = base64Encode(bytes);
                                         fileNameProfile = img64.toString();
@@ -525,9 +537,21 @@ class InitState extends State<VisitorForms> {
                                     } else if (imageSelectProfile == 'Camera') {
                                       PickedFile image = await ImagePicker()
                                           .getImage(source: ImageSource.camera);
+                                      // final Imag;ePicker _picker = ImagePicker();
+                                      //                                       // final XFile image =
+                                      //                                       // await _picker.pickImage(
+                                      //                                       //     source: ImageSource
+                                      //                                       //         .camera)
                                       if (image != null) {
-                                        final bytes = Io.File(image.path).readAsBytesSync();
-                                        String img64 = base64Encode(bytes);
+                                        print("inmahe  ${image}");
+                                        attachmentImage = image.path;
+                                        final bytes =  Io.File(image.path).readAsBytesSync();
+                                        print("image $attachmentImage");
+                                        print("image ${image.path}");
+                                        // String img64 = base64Encode(bytes);
+                                        String img64 = base64.encode(bytes);
+                                        print("image $img64");
+                                        print("image ${img64.length}");
                                         fileNameProfile = img64.toString();
                                         setState(() {
                                           file_name = "Image Uploaded ";
@@ -888,7 +912,8 @@ class InitState extends State<VisitorForms> {
                                                     genderType: genderId(visitorProvider.gender),
                                                     documentType: documentId(visitorProvider.docType),
                                                     visitorAdhdhar: visitorProvider.docId.text.toString(),
-                                                    fileName: fileNameProfile.toString(),
+                                                    fileName: attachmentImage,
+                                                    // fileName: fileNameProfile.toString(),
                                                     visitDurationType: visitId(visitorProvider.visitDuration),
                                                     purposeVisitType: purposeId(visitorProvider.purposeOfVisit),
                                                     vehicleType: vehicleId(visitorProvider.vehicleType),

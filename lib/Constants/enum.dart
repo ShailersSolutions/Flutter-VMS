@@ -11,7 +11,7 @@ String genderId(Gender genderType){
   }
 }
 
-String genderName(Gender genderSelected){
+ genderName( genderSelected){
   switch(genderSelected){
     case Gender.Male:
       return "Male";

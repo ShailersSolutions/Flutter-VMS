@@ -78,6 +78,7 @@ class InitState extends State<VisitorPage3> {
   List stateDrop = [];
   List cityDrop = [];
   String fileNameProfile = 'Select Image';
+  String profileImage = 'Select Image';
   String file_name = "Upload Your Photo";
   var height,width;
 
@@ -188,11 +189,11 @@ class InitState extends State<VisitorPage3> {
       BaseMethod().VMSToastMassage("Select Image Mode");
 
       return false;
-    } else if (imageSelectProfile == 'Camera' && fileNameProfile.isEmpty) {
+    } else if (imageSelectProfile == 'Camera' && profileImage.isEmpty) {
       BaseMethod().VMSToastMassage("Capture Image first");
 
       return false;
-    } else if (imageSelectProfile == 'Gallery' && fileNameProfile.isEmpty) {
+    } else if (imageSelectProfile == 'Gallery' && profileImage.isEmpty) {
       BaseMethod().VMSToastMassage("Select Image first");
       return false;
     }
@@ -473,8 +474,10 @@ class InitState extends State<VisitorPage3> {
                                     PickedFile image = await ImagePicker()
                                         .getImage(source: ImageSource.gallery);
                                     if (image != null) {
+                                      profileImage = image.path;
                                       final bytes = Io.File(image.path).readAsBytesSync();
                                       String img64 = base64Encode(bytes);
+                                      print(img64);
                                       fileNameProfile = img64.toString();
                                       setState(() {
                                         file_name = "Image Uploaded ";
@@ -488,8 +491,10 @@ class InitState extends State<VisitorPage3> {
                                     PickedFile image = await ImagePicker()
                                         .getImage(source: ImageSource.camera);
                                     if (image != null) {
+                                      profileImage = image.path;
                                       final bytes = Io.File(image.path).readAsBytesSync();
                                       String img64 = base64Encode(bytes);
+                                      print(img64);
                                       fileNameProfile = img64.toString();
                                       setState(() {
                                         file_name = "Image Uploaded ";
@@ -553,7 +558,8 @@ class InitState extends State<VisitorPage3> {
                                           'org_country_id': visitorFormProvider.orgCountry.toString(),
                                           'org_state_id': visitorFormProvider.orgState.toString(),
                                           'org_city_id': visitorFormProvider.orgCity.toString(),
-                                          'fileNameProfile': fileNameProfile.toString(),
+                                          'fileNameProfile': profileImage,
+                                          // 'fileNameProfile': fileNameProfile.toString(),
                                           'visitorAdhdhar': widget.visitorAdhdhar,
                                           'dateTime': widget.valueChanged1.toString(),
                                         });

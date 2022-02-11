@@ -150,7 +150,12 @@ class RequestManager {
             '$organizationpinCtrl,$department_id,$location_id,$building_id,$visite_duration,$vehical_type,'
             '$vehical_reg_num,$pan_drive,$hard_disk,$assets_name,$assets_number,$assets_brand');
 
-    Map<String, dynamic> body = {
+    String fileName1 = fileName.split('/').last;
+    print("filename==  $fileName1");
+    String fileName2 = fileNameProfile.split('/').last;
+    print("filename==  $fileName2");
+
+    var formData = FormData.fromMap({
       'name': visnName,
       'email': visEmail,
       'mobile': visPhone,
@@ -159,7 +164,7 @@ class RequestManager {
       'services': purposeVisitType,
       'gender': genderType,
       'visite_time': myDate,
-      'attachmant': fileName,
+      'attachmant': await MultipartFile.fromFile(fileName, filename: fileName1,contentType: MediaType("image", "png")),
       'officer_id': officerType,
       'vaccine': takenVaccineType,
       'vaccine_count': currentVaccineDose,
@@ -198,17 +203,21 @@ class RequestManager {
       'group_gender': '',
       'file_names': '',
       'attachments': '',
-      'file_name': fileNameProfile,
-    };
+      'file_name': await MultipartFile.fromFile(fileNameProfile, filename: fileName2,contentType: MediaType("image", "png")),
+    });
+    print(formData.fields);
+    var response = await dio.post(url,data: formData);
+    print("response of newVisit == ${response.data}");
+    print("response of newVisit == ${response.data.runtimeType}");
+    print("response of newVisit == ${response.data}");
+    // http.Response response = await http.post(Uri.parse(url),body: body);
+    // if (response.statusCode == 200) {
+    //   newRegistrationModel = NewRegistrationModel.fromJson(jsonDecode(response.data));
+    //   print('otp:${newRegistrationModel.message}');
+    //   return newRegistrationModel;
+    // } else {
+      return NewRegistrationModel.fromJson(response.data);
 
-    http.Response response = await http.post(Uri.parse(url),body: body);
-    if (response.statusCode == 200) {
-      newRegistrationModel = NewRegistrationModel.fromJson(jsonDecode(response.body));
-      print('otp:${newRegistrationModel.message}');
-      return newRegistrationModel;
-    } else {
-      return newRegistrationModel;
-    }
   }
 
   Future<LocationModel> getLocationApi() async {
