@@ -12,11 +12,13 @@ class BaseMethod {
     Fluttertoast.showToast(
         msg: '$s',
         toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
+        gravity: ToastGravity.CENTER,
         backgroundColor: Colors.blue[900],
         textColor: Colors.white,
         fontSize: 16.0);
   }
+
+
 
 
 

@@ -4,6 +4,7 @@ import 'package:facechk_app/Screen/Staff/reports.dart';
 import 'package:facechk_app/Screen/Staff/staff_dashboard.dart';
 import 'package:facechk_app/Screen/Staff/staff_profile.dart';
 import 'package:facechk_app/Screen/Staff/visitor_list.dart';
+import 'package:facechk_app/Screen/qrcode.dart';
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/services.dart';
@@ -56,9 +57,30 @@ class _StaffBottomNavBarState extends State<StaffBottomNavBar> {
       },
       child: Scaffold(
         appBar: AppBar(
-          elevation: 0,
+          elevation: 0,automaticallyImplyLeading: false,
           backgroundColor: Color(0XFF4FC3F7),
           title: Text("${formProvider.officeUrlModel.name} (${formProvider.staffLoginModel.locationName})"),
+            actions: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: InkWell(
+                onTap: (){
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              QRCode()));
+                },
+                child: Row(
+                  children: [
+                    Text("Scan"),
+                    SizedBox(width: 5,),
+                    Image.asset('images/qr_code_2.png',scale: 5,color: Colors.white,)
+                  ],
+                ),
+              ),
+            )
+          ],
         ),
           bottomNavigationBar: CurvedNavigationBar(
             key: _bottomNavigationKey,

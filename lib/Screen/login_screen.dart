@@ -107,16 +107,16 @@ class InitState extends State<LoginScreen> {
                                     GaurdLogin(loginType: "Staff Login",)));
                       },
                     ),
-                        AccessMethod(
-                          image: "images/visit.png",
-                          text: "Visitor Access",
-                          onTap: (){
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => VisitorScreen()));
-                          },
-                        ),
+                        // AccessMethod(
+                        //   image: "images/visit.png",
+                        //   text: "Visitor Access",
+                        //   onTap: (){
+                        //     Navigator.push(
+                        //         context,
+                        //         MaterialPageRoute(
+                        //             builder: (context) => VisitorScreen()));
+                        //   },
+                        // ),
                         AccessMethod(
                           image: "images/staff.png",
                           text: "Guard Access",

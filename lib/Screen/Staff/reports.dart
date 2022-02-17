@@ -57,15 +57,30 @@ class _ReportsState extends State<Reports> {
       children: [
         Expanded(
           flex: 1,
+          child: Padding(
+            padding: EdgeInsets.all(10),
+            child: Center(
+              child: Text("VISITOR REPORTS",
+                style: TextStyle(
+                    color: Colors.blue[800],
+                    fontSize: 25,
+                    fontWeight: FontWeight.w400
+                ),
+              ),
+            ),
+          ),
+        ),
+        Expanded(
+          flex: 1,
           child: Container(
             width: width,
             padding: EdgeInsets.all(10),
             decoration: BoxDecoration(
                 color: Colors.white,
                 boxShadow: [BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
-                  spreadRadius: 5,
-                  blurRadius: 7,
+                  color: Colors.grey.withOpacity(0.2),
+                  spreadRadius: 1,
+                  blurRadius: 2,
                   offset: Offset(0, 3), // changes position of shadow
                 ),]
             ),
@@ -165,28 +180,14 @@ class _ReportsState extends State<Reports> {
             ),
           ),
         ),
-        Expanded(
-          flex: 1,
-          child: Padding(
-            padding: EdgeInsets.all(10),
-            child: Center(
-              child: Text("VISITOR REPORTS",
-                style: TextStyle(
-                  color: Colors.blue[800],
-                  fontSize: 25,
-                  fontWeight: FontWeight.w400
-                ),
-              ),
-            ),
-          ),
-        ),
+
         Consumer<PreInvitationFormProvider>(
           builder: (context, value, child) {
             return Expanded(
               flex: 8,
               child: RefreshIndicator(
                 child: loading? Loading() : value.reportList.isEmpty ? Center(
-                  child: Text("No Visitors Yet",
+                  child: Text("No Record Found",
                     style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 20),),
                 ) : Container(
 

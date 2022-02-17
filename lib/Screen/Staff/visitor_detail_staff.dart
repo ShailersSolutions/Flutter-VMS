@@ -25,7 +25,7 @@ class _VisitorDetailStaffState extends State<VisitorDetailStaff> {
 
 
   bool loading = false, aLoading = false, rLoading = false, reLoading = false;
-  String companyUrl, status = "";
+  String companyUrl, status = "Action";
   var statusType;
   String dateTime = DateTime.now().toString();
 
@@ -34,6 +34,7 @@ class _VisitorDetailStaffState extends State<VisitorDetailStaff> {
     setState(() {
       loading = true;
     });
+    print("visitor id ${widget.userId}");
     Provider.of<PreInvitationFormProvider>(context, listen: false)
         .visitorDetailByIdApi(widget.userId)
     .then((value) {
@@ -58,19 +59,231 @@ class _VisitorDetailStaffState extends State<VisitorDetailStaff> {
     final double statusBarHeight = MediaQuery.of(context).padding.top;
     PreInvitationFormProvider formProvider = Provider.of(context, listen: false);
 
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Color(0XFF4FC3F7),
-        title: Text("${formProvider.officeUrlModel.name} (${formProvider.staffLoginModel.locationName})"),
-      ),
-      body: loading ? Center(child: Loading()) :
-      Consumer<PreInvitationFormProvider>(
-        builder: (context, value, child) {
-          var data = value.visitorDetailByIdModel;
-          return SingleChildScrollView(
+    return Consumer<PreInvitationFormProvider>(
+      builder: (context, value, child) {
+        var data = value.visitorDetailByIdModel;
+        return Scaffold(
+          appBar: AppBar(
+            elevation: 0,
+            backgroundColor: Color(0XFF4FC3F7),automaticallyImplyLeading: false,
+            title: Text("${formProvider.officeUrlModel.name} (${formProvider.staffLoginModel.locationName})"),
+            actions: [
+              widget.isVisitorList || widget.isReport ? SizedBox() : data.status == 0 ? aLoading ? SizedBox()
+                  : Container(
+                width: 120,
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton<Status>(
+                      dropdownColor: Color(0XFF4FC3F7),
+                      icon: Icon(Icons.more_vert,color: Colors.white,),
+                      hint: Text(status,style: TextStyle(color: Colors.white),),
+                      style: TextStyle(
+                        color: Colors.white
+                      ),
+                      iconSize: 30,
+                      isExpanded: true,
+                      value: statusType,
+                      items: Status.values.map((Status status) {
+                        return DropdownMenuItem(
+                          value: status,
+                          child: Text(
+                            statusName(status),
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 15,
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (Status val) {
+                        setState(()  {
+                          statusType = val ;
+                          if(statusId(val) == 1){
+                            print("approve");
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return StatefulBuilder(
+                                  builder: (context, setState) {
+                                    return Container(
+
+                                      child: AlertDialog(
+                                        title: Text("Are you sure want to approve?"),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            child: Text("Submit"),
+                                            onPressed: () async{
+                                              RequestManager().approve(data.officerId.toString(), data.id.toString()).then((approve) {
+                                                setState(() {
+                                                  if(approve['status'] == "success"){
+                                                    aLoading = true;
+                                                    Navigator.of(context).pop();
+                                                    BaseMethod().VMSToastMassage("Request Approved");
+                                                  }
+                                                });
+                                              });
+                                            },
+                                          ),
+                                          TextButton(
+                                            child: Text("Close"),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                          )
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                            );
+
+                          }else if(statusId(val) == 2){
+                            print("reject");
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return StatefulBuilder(
+                                  builder: (context, setState) {
+                                    return Container(
+
+                                      child: AlertDialog(
+                                        title: Text("Are you sure want to reject?"),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            child: Text("Submit"),
+                                            onPressed: () async{
+                                              RequestManager().reject(data.officerId.toString(), data.id.toString()).then((reject) {
+                                                setState(() {
+                                                  if(reject['status'] == "success"){
+                                                    aLoading = true;
+                                                    Navigator.of(context).pop();
+                                                    BaseMethod().VMSToastMassage("Request Rejected");
+                                                  }
+                                                });
+                                              });
+                                            },
+                                          ),
+                                          TextButton(
+                                            child: Text("Close"),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                          )
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                            );
+
+                          }else if(statusId(val) == 3){
+                            print("reschedule");
+                            showDialog(
+                              context: context,
+
+                              builder: (context) {
+
+                                return StatefulBuilder(
+                                  builder: (context, setState) {
+                                    return Container(
+
+                                      child: AlertDialog(
+                                        title: Text("Enter date"),
+                                        content: Container(
+                                          height: 70,
+                                          margin: const EdgeInsets.only(left: 10, right: 10,top: 20),
+                                          padding: const EdgeInsets.all(5),
+                                          alignment: Alignment.centerLeft,
+                                          decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
+                                          child: DateTimePicker(
+                                            type: DateTimePickerType.dateTimeSeparate,
+                                            dateMask: 'yyyy-MMM-d',
+                                            initialValue: '',
+                                            firstDate: DateTime(2000),
+                                            lastDate: DateTime(2100),
+                                            dateHintText: 'Date',
+                                            timeHintText: "Hour",
+
+                                            onChanged: (val) {
+                                              setState(() {
+                                                dateTime = val;
+                                                print(dateTime);
+                                              });
+                                            },
+                                          ),
+                                        ),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            child: Text("Submit"),
+                                            onPressed: () async{
+                                              if(dateTime.isEmpty){
+                                                BaseMethod().VMSToastMassage("Enter Date");
+                                              }else{
+                                                RequestManager().reSchedule(data.officerId.toString(), data.id.toString(), dateTime).then((reject) {
+                                                  setState(() {
+                                                    if(reject['status'] == "success"){
+                                                      aLoading = true;
+                                                      Navigator.pop(context);
+                                                      BaseMethod().VMSToastMassage("Visitor ReScheduled Successfully");
+                                                      // setState(() {
+                                                      //   loading = true;
+                                                      // });
+                                                      // Provider.of<PreInvitationFormProvider>(context, listen: false)
+                                                      //     .visitorDetailByIdApi(widget.userId)
+                                                      //     .then((value) {
+                                                      //   setState(() {
+                                                      //     loading = false;
+                                                      //   });
+                                                      // });
+                                                      // getImage();
+                                                    }
+                                                  });
+                                                });
+                                              }
+                                            },
+                                          ),
+                                          TextButton(
+                                            child: Text("Close"),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                          )
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                            );
+                          }
+                        });
+                      }),
+                ),
+              ) : SizedBox()
+            ],
+          ),
+          body: loading ? Center(child: Loading()) :
+          SingleChildScrollView(
               child: Column(
                   children: [
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(left: 10, right: 10),
+                      padding: EdgeInsets.all(0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Visitor Details ",
+                            style: TextStyle(fontSize: 20, color: Colors.blue[900],fontWeight: FontWeight.w500),
+                          ),
+
+                        ],
+                      ),
+                    ),
                     SizedBox(
                       height: 10,
                     ),
@@ -79,156 +292,11 @@ class _VisitorDetailStaffState extends State<VisitorDetailStaff> {
                         text: TextSpan(
                             children: <TextSpan>[
                               TextSpan(text: "Appointment Slip & Status: ", style: TextStyle(fontWeight: FontWeight.bold,color: Colors.black,fontSize: 19),),
-                              TextSpan(text: data.status == 1 ? "Approve" : "Pending",style: TextStyle(
-                                  color: data.status == 1 ? Colors.green : Colors.red,
+                              TextSpan(text: data.status == 1 || data.status == 2 ? "Approve" : "Pending",style: TextStyle(
+                                  color: data.status == 1|| data.status == 2 ? Colors.green : Colors.red,
                                   fontWeight: FontWeight.bold,fontSize: 19) ),
                             ]
                         ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(top: 10, left: 10, right: 10),
-                      padding: EdgeInsets.all(0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Visitor Details ",
-                            style: TextStyle(fontSize: 20, color: Colors.blue[900]),
-                          ),
-                          widget.isVisitorList || widget.isReport ? SizedBox() : data.status == 0 ? aLoading ? SizedBox() : Container(
-                            width: 130,
-                            child: DropdownButtonHideUnderline(
-                              child: DropdownButton<Status>(
-                                  dropdownColor: Colors.white,
-                                  icon: Icon(Icons.more_vert),
-                                  hint: Text(status),
-                                  iconSize: 36,
-                                  isExpanded: true,
-                                  value: statusType,
-                                  items: Status.values.map((Status status) {
-                                    return DropdownMenuItem(
-                                      value: status,
-                                      child: Text(
-                                        statusName(status),
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 15,
-                                        ),
-                                      ),
-                                    );
-                                  }).toList(),
-                                  onChanged: (Status val) {
-                                    setState(()  {
-                                      statusType = val ;
-                                      if(statusId(val) == 1){
-                                        print("approve");
-                                         RequestManager().approve(data.officerId.toString(), data.id.toString()).then((approve) {
-                                           setState(() {
-                                             if(approve['status'] == "success"){
-                                               aLoading = true;
-                                               BaseMethod().VMSToastMassage("Visitor Approved Successfully");
-                                             }
-                                           });
-                                         });
-                                      }else if(statusId(val) == 2){
-                                        print("reject");
-                                        RequestManager().reject(data.officerId.toString(), data.id.toString()).then((reject) {
-                                          setState(() {
-                                            if(reject['status'] == "success"){
-                                              aLoading = true;
-                                              BaseMethod().VMSToastMassage("Visitor Rejected Successfully");
-                                            }
-                                          });
-                                        });
-                                      }else if(statusId(val) == 3){
-                                        print("reschedule");
-                                        showDialog(
-                                          context: context,
-
-                                          builder: (context) {
-
-                                            return StatefulBuilder(
-                                              builder: (context, setState) {
-                                                return Container(
-
-                                                  child: AlertDialog(
-                                                    title: Text("Enter date"),
-                                                    content: Container(
-                                                      height: 70,
-                                                      margin: const EdgeInsets.only(left: 10, right: 10,top: 20),
-                                                      padding: const EdgeInsets.all(5),
-                                                      alignment: Alignment.centerLeft,
-                                                      decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
-                                                      child: DateTimePicker(
-                                                        type: DateTimePickerType.dateTimeSeparate,
-                                                        dateMask: 'yyyy-MMM-d',
-                                                        initialValue: '',
-                                                        firstDate: DateTime(2000),
-                                                        lastDate: DateTime(2100),
-                                                        dateHintText: 'Date',
-                                                        timeHintText: "Hour",
-
-                                                        onChanged: (val) {
-                                                          setState(() {
-                                                            dateTime = val;
-                                                            print(dateTime);
-                                                          });
-                                                        },
-                                                      ),
-                                                    ),
-                                                    actions: <Widget>[
-                                                      TextButton(
-                                                        child: Text("Submit"),
-                                                        onPressed: () async{
-                                                          if(dateTime.isEmpty){
-                                                            BaseMethod().VMSToastMassage("Enter Date");
-                                                          }else{
-                                                            RequestManager().reSchedule(data.officerId.toString(), data.id.toString(), dateTime).then((reject) {
-                                                              setState(() {
-                                                                if(reject['status'] == "success"){
-                                                                  aLoading = true;
-                                                                  Navigator.pop(context);
-                                                                  BaseMethod().VMSToastMassage("Visitor ReScheduled Successfully");
-                                                                  // setState(() {
-                                                                  //   loading = true;
-                                                                  // });
-                                                                  // Provider.of<PreInvitationFormProvider>(context, listen: false)
-                                                                  //     .visitorDetailByIdApi(widget.userId)
-                                                                  //     .then((value) {
-                                                                  //   setState(() {
-                                                                  //     loading = false;
-                                                                  //   });
-                                                                  // });
-                                                                  // getImage();
-                                                                }
-                                                              });
-                                                            });
-                                                          }
-                                                        },
-                                                      ),
-                                                      TextButton(
-                                                        child: Text("Close"),
-                                                        onPressed: () {
-                                                          Navigator.of(context).pop();
-                                                        },
-                                                      )
-                                                    ],
-                                                  ),
-                                                );
-                                              },
-                                            );
-                                          },
-                                        );
-                                      }
-                                    });
-                                  }),
-                            ),
-                          ) : SizedBox()
-                        ],
                       ),
                     ),
                     SizedBox(
@@ -378,9 +446,9 @@ class _VisitorDetailStaffState extends State<VisitorDetailStaff> {
                     SizedBox(
                       height: 10,
                     ),
-                  ]));
-        },
-      ),
+                  ]))
+        );
+      },
     );
   }
 

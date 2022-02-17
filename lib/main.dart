@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:facechk_app/ApiService/BaseMethod.dart';
 import 'package:facechk_app/Provider/pre_invite_form_provider.dart';
 import 'package:facechk_app/Provider/visitor_form_provider.dart';
 import 'package:facechk_app/Screen/guardlist.dart';
@@ -11,9 +14,7 @@ import 'package:facechk_app/Screen/Staff/staff_dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-
-import 'Screen/Visitor_detail.dart';
-
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'Screen/visitor_page4.dart';
 
 void main() {
@@ -29,7 +30,66 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: TestPage(),
+    );
+  }
+}
+
+class TestPage extends StatefulWidget {
+
+  TestPage({Key key}) : super(key: key);
+
+  @override
+  _TestPageState createState() => _TestPageState();
+}
+
+class _TestPageState extends State<TestPage> {
+
+  ConnectivityResult connectivityResult = ConnectivityResult.none;
+  final Connectivity connectivity = Connectivity();
+  StreamSubscription<ConnectivityResult> streamSubscription;
+
+  Future<void> initConnectivity() async {
+    ConnectivityResult result;
+    try{
+      result = await connectivity.checkConnectivity();
+    }on PlatformException catch(e){
+      print(e.toString());
+      return;
+    }
+    if(!mounted){
+      return Future.value(null);
+    }
+    return updateConnectionState(result);
+  }
+
+  Future<void> updateConnectionState(ConnectivityResult result) async{
+    setState(() {
+      connectivityResult = result;
+    });
+    if(connectivityResult.name == "none"){
+      return showAlertDialog(context);
+    }
+    
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    initConnectivity();
+    streamSubscription = connectivity.onConnectivityChanged.listen(updateConnectionState);
+  }
+
+  @override
+  void dispose() {
+    streamSubscription.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,4 +114,32 @@ class MyApp extends StatelessWidget {
       },
     );
   }
+  showAlertDialog(BuildContext context) {
+
+    // set up the button
+    Widget okButton = TextButton(
+      child: Text("OK"),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("No Internet Connection available"),
+      content: Text("Please check your internet connection and try again"),
+      actions: [
+        okButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
 }
+

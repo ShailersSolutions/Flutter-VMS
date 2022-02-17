@@ -35,7 +35,7 @@ class _AccessMethodState extends State<AccessMethod> {
           child: Row(children: [
             Container(
               padding: EdgeInsets.only(
-                  left: 20, right: 40, bottom: 5, top: 5),
+                  left: 20, right: 30, bottom: 5, top: 5),
               child: Image.asset(
                 widget.image,
                 width: 30,

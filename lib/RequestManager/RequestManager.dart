@@ -9,6 +9,7 @@ import 'package:facechk_app/Models/DetailQRModel.dart';
 import 'package:facechk_app/Models/GaurdLoginModel.dart';
 import 'package:facechk_app/Models/LocationModel.dart';
 import 'package:facechk_app/Models/NewRegistrationModel.dart';
+import 'package:facechk_app/Models/OfficerModel.dart';
 import 'package:facechk_app/Models/OtpVerifyModel.dart';
 import 'package:facechk_app/Models/StateModel.dart';
 import 'package:facechk_app/Models/all_visitors_list.dart';
@@ -277,6 +278,24 @@ class RequestManager {
     print(response.statusCode);
     if(response.statusCode == 200){
       return DepartmentModel.fromJson(jsonDecode(response.body));
+    }
+
+  }
+
+  Future<OfficerModel> getOfficer(var departmentId) async{
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var companyUrl = prefs.getString('baseUrl');
+    var url = 'https://vztor.in/$companyUrl/public/api/getOfficer';
+    print(url);
+    Map<String, dynamic> body = {
+      'department_id': departmentId,
+    };
+    var response = await http.post(Uri.parse(url),body: body);
+    print(response.body);
+    print(response.statusCode);
+    if(response.statusCode == 200){
+      return OfficerModel.fromJson(jsonDecode(response.body));
     }
 
   }
@@ -588,7 +607,7 @@ class RequestManager {
 
   Future<Block> addPreInvitation(String imageGallery, String name,
       String mobile, String email, int userid, String companyId, var dateTime,
-      var locId, var buildId, var deptId) async{
+      var locId, var buildId, var deptId, var officerId) async{
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var companyUrl = prefs.getString('baseUrl');
@@ -607,6 +626,7 @@ class RequestManager {
       "building_id": buildId,
       "department_id": deptId,
       "image": await MultipartFile.fromFile(imageGallery, filename: fileName),
+      "officer_id" : officerId
     });
     print(formData.fields);
     var response = await dio.post(url,data: formData);

@@ -15,11 +15,11 @@ class OfficerModel {
   });
 
   String status;
-  List<Date> date;
+  List<OfficerData> date;
 
   factory OfficerModel.fromJson(Map<String, dynamic> json) => OfficerModel(
     status: json["status"],
-    date: List<Date>.from(json["date"].map((x) => Date.fromJson(x))),
+    date: List<OfficerData>.from(json["date"].map((x) => OfficerData.fromJson(x))),
   );
 
   Map<String, dynamic> toJson() => {
@@ -28,8 +28,8 @@ class OfficerModel {
   };
 }
 
-class Date {
-  Date({
+class OfficerData {
+  OfficerData({
     this.id,
     this.roleId,
     this.companyId,
@@ -79,31 +79,31 @@ class Date {
   DateTime updatedAt;
   dynamic deletedAt;
 
-  factory Date.fromJson(Map<String, dynamic> json) => Date(
-    id: json["id"],
-    roleId: json["role_id"],
-    companyId: json["company_id"],
-    departmentId: json["department_id"],
-    locationId: json["location_id"] == null ? null : json["location_id"],
-    buildingId: json["building_id"] == null ? null : json["building_id"],
-    twoFactor: json["two_factor"] == null ? null : json["two_factor"],
-    deviceId: json["device_id"] == null ? null : json["device_id"],
-    name: json["name"],
-    email: json["email"],
-    mobile: json["mobile"],
-    gender: json["gender"],
-    address: json["address"],
-    avatar: json["avatar"] == null ? null : json["avatar"],
-    allowedIp: json["allowed_ip"],
-    ip: json["ip"],
-    employeeType: json["employee_type"],
-    fromDate: json["from_date"],
-    tillDate: json["till_date"],
-    statusId: json["status_id"],
-    createdAt: DateTime.parse(json["created_at"]),
-    updatedAt: DateTime.parse(json["updated_at"]),
-    deletedAt: json["deleted_at"],
-  );
+  OfficerData.fromJson(Map<String, dynamic> json) {
+    id = json["id"];
+    roleId = json["role_id"];
+    companyId = json["company_id"];
+    departmentId = json["department_id"];
+    locationId = json["location_id"] == null ? null : json["location_id"];
+    buildingId = json["building_id"] == null ? null : json["building_id"];
+    twoFactor = json["two_factor"] == null ? null : json["two_factor"];
+    deviceId = json["device_id"] == null ? null : json["device_id"];
+    name = json["name"];
+    email = json["email"];
+    mobile = json["mobile"];
+    gender = json["gender"];
+    address = json["address"];
+    avatar = json["avatar"] == null ? null : json["avatar"];
+    allowedIp = json["allowed_ip"];
+    ip = json["ip"];
+    employeeType = json["employee_type"];
+    fromDate = json["from_date"];
+    tillDate = json["till_date"];
+    statusId = json["status_id"];
+    createdAt = DateTime.parse(json["created_at"]);
+    updatedAt = DateTime.parse(json["updated_at"]);
+    deletedAt = json["deleted_at"];
+  }
 
   Map<String, dynamic> toJson() => {
     "id": id,

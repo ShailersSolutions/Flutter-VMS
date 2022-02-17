@@ -69,7 +69,7 @@ class _GuardVisitorDetailsState extends State<GuardVisitorDetails> {
       child: Scaffold(
         appBar: AppBar(
           elevation: 0,
-          backgroundColor: Color(0XFF4FC3F7),
+          backgroundColor: Color(0XFF4FC3F7),automaticallyImplyLeading: false,
           title: Text("${formProvider.officeUrlModel.name}"),
           actions: [
             IconButton(
@@ -94,28 +94,30 @@ class _GuardVisitorDetailsState extends State<GuardVisitorDetails> {
                         height: 10,
                       ),
                       Container(
-                        child: RichText(
-                          text: TextSpan(
-                              children: <TextSpan>[
-                                TextSpan(text: "Appointment Slip & Status: ", style: TextStyle(fontWeight: FontWeight.bold,color: Colors.black,fontSize: 19),),
-                                TextSpan(text: data.status == 1 ? "Approve" : "Pending",style: TextStyle(
-                                    color: data.status == 1 ? Colors.green : Colors.red,
-                                    fontWeight: FontWeight.bold,fontSize: 19) ),
-                              ]
-                          ),
+                        margin: EdgeInsets.only( left: 10, right: 3),
+                        padding: EdgeInsets.all(0),
+                        child: Text(
+                          "Visitor Details ",
+                          style: TextStyle(fontSize: 20, color: Colors.blue[900],fontWeight: FontWeight.w500),
                         ),
                       ),
                       SizedBox(
                         height: 10,
                       ),
                       Container(
-                        margin: EdgeInsets.only(top: 10, left: 10, right: 3),
-                        padding: EdgeInsets.all(0),
-                        child: Text(
-                          "Visitor Details ",
-                          style: TextStyle(fontSize: 20, color: Colors.blue[900]),
+                        child: RichText(
+                          text: TextSpan(
+                              children: <TextSpan>[
+                                TextSpan(text: "Appointment Slip & Status: ", style: TextStyle(fontWeight: FontWeight.bold,color: Colors.black,fontSize: 19),),
+                                TextSpan(text: data.status == 1 || data.status == 2? "Approve" : "Pending",style: TextStyle(
+                                    color: data.status == 1|| data.status == 2 ? Colors.green : Colors.red,
+                                    fontWeight: FontWeight.bold,fontSize: 19) ),
+                              ]
+                          ),
                         ),
                       ),
+
+
                       SizedBox(
                         height: 10,
                       ),
@@ -179,12 +181,12 @@ class _GuardVisitorDetailsState extends State<GuardVisitorDetails> {
                           width: 120,
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              primary: data.status == 1 ? Colors.green : Colors.grey,
+                              primary: data.status == 1 || data.status == 2? Colors.green : Colors.grey,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5),
                               ),),
                             onPressed: () async{
-                              data.status == 1 ? showDialog(
+                              data.status == 1 || data.status == 2? showDialog(
                                 context: context,
 
                                 builder: (context) {

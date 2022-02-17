@@ -92,11 +92,11 @@ class _OverStayingState extends State<OverStaying> {
                         itemCount: value.overStayingList.length,
                         itemBuilder: (context, index) {
                           var data = value.overStayingList[index];
-                          var outTime,inTime;
-                          data.outTime == null ? "" : outTime = DateTime.parse(value.overStayingList[7].outTime);
-                          data.inTime == null ? "" : inTime = DateTime.parse(value.overStayingList[7].inTime);
-
-                          print(inTime.difference(outTime).inDays);
+                          // var outTime,inTime;
+                          // data.outTime == null ? "" : outTime = DateTime.parse(value.overStayingList[7].outTime);
+                          // data.inTime == null ? "" : inTime = DateTime.parse(value.overStayingList[7].inTime);
+                          //
+                          // print(inTime.difference(outTime).inDays);
 
                           return GestureDetector(
                             onTap: (){

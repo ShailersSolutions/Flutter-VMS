@@ -2,6 +2,7 @@ import 'package:facechk_app/Models/BuildingModel.dart';
 import 'package:facechk_app/Models/DepartmentModel.dart';
 import 'package:facechk_app/Models/GaurdLoginModel.dart';
 import 'package:facechk_app/Models/LocationModel.dart';
+import 'package:facechk_app/Models/OfficerModel.dart';
 import 'package:facechk_app/Models/all_visitors_list.dart';
 import 'package:facechk_app/Models/block.dart';
 import 'package:facechk_app/Models/current_visitors.dart';
@@ -33,9 +34,10 @@ class PreInvitationFormProvider with ChangeNotifier{
   String staffName,staffEmail,staffMobile;
   int staffId;
 
-  var locationId, buildingId, departmentId;
+  var locationId, buildingId, departmentId, officerId;
   List<Date> locationList = [];
   List<DepartmentData> departmentList = [];
+  List<OfficerData> officerList = [];
   List<BuildingData> buildingList = [];
   List<PreInvitationData> preInvitationList = [];
   List<OverStayingData> overStayingList = [];
@@ -90,6 +92,11 @@ class PreInvitationFormProvider with ChangeNotifier{
     notifyListeners();
   }
 
+  setOfficerList(List<OfficerData> list){
+    officerList = list;
+    notifyListeners();
+  }
+
   setReportList(List<ReportData> list){
     reportList = list;
     notifyListeners();
@@ -140,6 +147,11 @@ class PreInvitationFormProvider with ChangeNotifier{
   Future departmentApi(var buildId) async {
     var res = await RequestManager().getDepartment(buildId, officeUrlModel.id);
     setDepartmentList(res.date);
+  }
+
+  Future officerApi(var departId) async {
+    var res = await RequestManager().getOfficer(departId/*, officeUrlModel.id*/);
+    setOfficerList(res.date);
   }
 
   Future upComingVisitorApi() async{
@@ -216,7 +228,7 @@ class PreInvitationFormProvider with ChangeNotifier{
 
   Future addPreInvitationApi(image) async{
     var res = await RequestManager().addPreInvitation(image,name.text,verifyPhone.text,email.text,staffId,
-        officeUrlModel.id,dateTime,locationId,buildingId,departmentId);
+        officeUrlModel.id,dateTime,locationId,buildingId,departmentId,officerId);
     setPreInvitation(res);
     print("addPreInvitationApi ${res.runtimeType}");
     return res;

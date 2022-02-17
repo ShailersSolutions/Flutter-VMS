@@ -51,7 +51,7 @@ class _GuardMainState extends State<GuardMain> {
         initialIndex: 0,
         child: Scaffold(
           appBar: AppBar(
-            elevation: 0,
+            elevation: 0,automaticallyImplyLeading: false,
             backgroundColor: Color(0XFF4FC3F7),
             title: Text("${formProvider.officeUrlModel.name}"),
             actions: [

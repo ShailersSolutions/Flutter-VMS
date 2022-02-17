@@ -82,25 +82,36 @@ class _GuardMainDashboardState extends State<GuardMainDashboard> {
                               ),
                             ),
                           ),
+                          AccessMethod(
+                            onTap: (){
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          GuardMain()));
+                            },
+                            image: 'images/person.png',
+                            text: 'Check Visitors List',
+                          ),
 
-                          AccessMethod(
-                            onTap: (){
-                              Navigator.push(context, MaterialPageRoute(
-                                  builder: (context)=>SendOtp(mytitle: 'New_visit',)
-                              ));
-                            },
-                            text: "New Visit",
-                            image: 'images/newvisitors.jpg',
-                          ),
-                          AccessMethod(
-                            onTap: (){
-                              Navigator.push(context, MaterialPageRoute(
-                                  builder: (context)=>SendOtp(mytitle: 're_visit',)
-                              ));
-                            },
-                            image: 'images/revisitors.png',
-                            text: 'Re Visit',
-                          ),
+                          // AccessMethod(
+                          //   onTap: (){
+                          //     Navigator.push(context, MaterialPageRoute(
+                          //         builder: (context)=>SendOtp(mytitle: 'New_visit',)
+                          //     ));
+                          //   },
+                          //   text: "New Visit",
+                          //   image: 'images/newvisitors.jpg',
+                          // ),
+                          // AccessMethod(
+                          //   onTap: (){
+                          //     Navigator.push(context, MaterialPageRoute(
+                          //         builder: (context)=>SendOtp(mytitle: 're_visit',)
+                          //     ));
+                          //   },
+                          //   image: 'images/revisitors.png',
+                          //   text: 'Re Visit',
+                          // ),
                           AccessMethod(
                             onTap: (){
                               Navigator.push(context, MaterialPageRoute(
@@ -127,17 +138,7 @@ class _GuardMainDashboardState extends State<GuardMainDashboard> {
                             },
                             image: 'images/person.png',
                             text: 'Guard Log Out',
-                          ) :*/ AccessMethod(
-                            onTap: (){
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                    GuardMain()));
-                            },
-                            image: 'images/person.png',
-                            text: 'Dashboard',
-                          ),
+                          ) :*/
                           AccessMethod(
                             onTap: ()async{
                               SharedPreferences prefs = await SharedPreferences.getInstance();

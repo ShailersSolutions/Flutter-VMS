@@ -67,24 +67,40 @@ class _PreInvitationFormState extends State<PreInvitationForm> {
                         ),
                       ),
                     ),
-                    GestureDetector(
-                      onTap: ()async{
-                        PickedFile images = await ImagePicker()
-                            .getImage(source: ImageSource.gallery);
-                        if (images != null) {
-                          setState(() {
-                            image = images.path ;
-                          });
-                        }
-                      },
-                      child: image == null ? CircleAvatar(
-                        backgroundColor: Colors.white,
-                        radius: 70,
-                        backgroundImage: NetworkImage("https://clipartart.com/images/facebook-profile-icon-clipart-7.png",),
-                      ) : CircleAvatar(
-                        backgroundColor: Colors.white,
-                        radius: 70,
-                        backgroundImage: FileImage(File(image)),
+                    Container(
+                        height: 120,width: 120,
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            // borderRadius: BorderRadius.circular(70),
+                            border: Border.all(color: Colors.black)
+                        ),
+                        child: image == null ? CircleAvatar(
+                          backgroundColor: Colors.white,
+                          radius: 70,
+                          backgroundImage: NetworkImage("https://clipartart.com/images/facebook-profile-icon-clipart-7.png",),
+                        )
+                            : CircleAvatar(
+                          backgroundColor: Colors.white,
+                          radius: 70,
+                          backgroundImage: FileImage(File(image)),
+                        )
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(15),
+                      child: InkWell(
+                        onTap: ()async{
+                          PickedFile images = await ImagePicker()
+                              .getImage(source: ImageSource.gallery);
+                          if (images != null) {
+                            setState(() {
+                              image = images.path ;
+                            });
+                          }
+                        },
+                        child: Text("Click here to upload Image",style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w400
+                        ),),
                       ),
                     ),
                     CommonTextForm(
@@ -246,7 +262,55 @@ class _PreInvitationFormState extends State<PreInvitationForm> {
                                         onChanged: ( val) {
                                           setState(() {
                                             value.departmentId = val;
-
+                                            value.officerId = null;
+                                            value.officerApi(value.departmentId);
+                                          });
+                                        }),
+                                  )
+                              )
+                          ),
+                        );
+                      },
+                    ),
+                    Consumer<PreInvitationFormProvider>(
+                      builder: (context, value, child) {
+                        return Center(
+                          child: Padding(
+                              padding: EdgeInsets.fromLTRB(10,20,10,0),
+                              child: Container(
+                                  padding: EdgeInsets.only(
+                                    left: 7,
+                                    right: 7,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Colors.black26,
+                                    ),
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                  child:DropdownButtonHideUnderline(
+                                    child: DropdownButton(
+                                        dropdownColor: Colors.white,
+                                        icon: Icon(Icons.arrow_drop_down,color: value.officerList.isEmpty ? Colors.white: Colors.black,),
+                                        iconSize: 36,
+                                        isExpanded: true,
+                                        value: value.officerId,
+                                        hint: Text(value.officerList.isEmpty ? "No Officer added" :'Select Your Officer'),
+                                        items: value.officerList.map((e) {
+                                          return DropdownMenuItem(
+                                            value: e.id.toString(),
+                                            child: Text(
+                                              e.name.toString(),
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 15,
+                                              ),
+                                            ),
+                                          );
+                                        }).toList(),
+                                        onChanged: ( val) {
+                                          setState(() {
+                                            value.officerId = val;
                                           });
                                         }),
                                   )
@@ -285,31 +349,6 @@ class _PreInvitationFormState extends State<PreInvitationForm> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          loading ? Center(child: CircularProgressIndicator(),) : SizedBox(
-                            height: 60,
-                            width: 100,
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                primary: Colors.blue[900],
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5),
-                                ),),
-                              onPressed: () {
-                                setState(() {
-                                  loading = true;
-                                });
-                                formProvider.addPreInvitationApi(image).then((value){
-                                  print(value);
-                                  setState(() {
-                                    loading = false;
-                                  });
-                                  Navigator.of(context).pop();
-                                  BaseMethod().VMSToastMassage("Pre Invitation sent successfully");
-                                });
-                              },
-                              child: Text("Send",style: TextStyle(color: Colors.white),),
-                            ),
-                          ),
                           SizedBox(
                             height: 60,
                             width: 100,
@@ -323,6 +362,46 @@ class _PreInvitationFormState extends State<PreInvitationForm> {
                                 Navigator.of(context).pop();
                               },
                               child: Text("Back",style: TextStyle(color: Colors.white),),
+                            ),
+                          ),
+                          loading ? Center(child: CircularProgressIndicator(),) : SizedBox(
+                            height: 60,
+                            width: 100,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                primary: Colors.blue[900],
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5),
+                                ),),
+                              onPressed: () {
+                                if(image == null){
+                                  BaseMethod().VMSToastMassage("Select Image");
+                                }else if(formProvider.verifyPhone.text == ""){
+                                  BaseMethod().VMSToastMassage("Please enter the mobile number");
+                                }else if(formProvider.email.text == ""){
+                                  BaseMethod().VMSToastMassage("Please enter the email");
+                                }else if(formProvider.name.text == ""){
+                                  BaseMethod().VMSToastMassage("Please enter the name");
+                                }else if(formProvider.locationId == null){
+                                  BaseMethod().VMSToastMassage("Select location");
+                                }else if(formProvider.dateTime == ""){
+                                  BaseMethod().VMSToastMassage("Please select pre visit date time");
+                                }else if(formProvider.officerId == null){
+                                  BaseMethod().VMSToastMassage("Select Officer");
+                                }else{
+                                  setState(() {
+                                    loading = true;
+                                  });
+                                  formProvider.addPreInvitationApi(image).then((value){
+                                    setState(() {
+                                      loading = false;
+                                    });
+                                    Navigator.of(context).pop();
+                                    BaseMethod().VMSToastMassage("Pre Invitation sent successfully");
+                                  });
+                                }
+                              },
+                              child: Text("Send",style: TextStyle(color: Colors.white),),
                             ),
                           ),
                         ],

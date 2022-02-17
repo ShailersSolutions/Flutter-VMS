@@ -1,6 +1,7 @@
 import 'package:facechk_app/Provider/pre_invite_form_provider.dart';
 import 'package:facechk_app/Screen/Staff/emergency_list.dart';
 import 'package:facechk_app/Screen/guardlogin.dart';
+import 'package:facechk_app/Screen/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -57,13 +58,23 @@ class _StaffProfileState extends State<StaffProfile> {
                           "Your Profile",
                           style: TextStyle(fontSize: 22, fontWeight: FontWeight.w400,color: Colors.blue[900]),
                         ),
-                        IconButton(
-                          onPressed: ()async{
+                        InkWell(
+                          onTap: ()async{
                             SharedPreferences prefs = await SharedPreferences.getInstance();
                             prefs.remove('staffId');
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => GaurdLogin(loginType: "Staff Login",)));
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen()));
+                            // Navigator.push(context, MaterialPageRoute(builder: (context) => GaurdLogin(loginType: "Staff Login",)));
                           },
-                          icon: Icon(Icons.logout)
+                          child: Row(
+                            children: [
+                              Text(
+                                "Logout",
+                                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
+                              ),
+                              SizedBox(width: 10,),
+                              Icon(Icons.logout),
+                            ],
+                          ),
                         )
                       ],
                     ),

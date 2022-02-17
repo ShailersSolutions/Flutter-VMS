@@ -187,14 +187,15 @@ class _GaurdLoginState extends State<GaurdLogin> {
                                     child: Text('Sign In',style: TextStyle(fontSize: 16),),
                                     onPressed: () async{
                                       SharedPreferences prefs = await SharedPreferences.getInstance();
-                                      setState(() {
-                                        loading = true;
-                                      });
+
                                       print('Visitor List ');
                                       if(widget.loginType == "Staff Login"){
                                         if(gaurdNameCtrl.text.isEmpty || passwordCtrl.text.isEmpty){
                                           BaseMethod().VMSToastMassage("Please fill all the details");
                                         }else {
+                                          setState(() {
+                                            loading = true;
+                                          });
                                           await RequestManager().staffLogin(gaurdNameCtrl.text,
                                               passwordCtrl.text,formProvider.officeUrlModel.id).then((value){
                                             setState(() {
@@ -223,6 +224,9 @@ class _GaurdLoginState extends State<GaurdLogin> {
                                         if(gaurdNameCtrl.text.isEmpty || passwordCtrl.text.isEmpty){
                                           BaseMethod().VMSToastMassage("Please fill all the details");
                                         }else {
+                                          setState(() {
+                                            loading = true;
+                                          });
                                           await RequestManager().guardLogin(gaurdNameCtrl.text, passwordCtrl.text, formProvider.officeUrlModel.id).then((value) {
                                             setState(() {
                                               loading = false;
@@ -251,9 +255,9 @@ class _GaurdLoginState extends State<GaurdLogin> {
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(15),
                                     ),
-                                    color: Colors.blue[900],
+                                    color: Colors.grey,
                                     textColor: Colors.white,
-                                    child: Text('Login as',style: TextStyle(fontSize: 16),),
+                                    child: Text('Go Back',style: TextStyle(fontSize: 16),),
                                     onPressed: () async{
                                       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => LoginScreen()), (route) => false);
                                     },
