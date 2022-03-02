@@ -97,6 +97,11 @@ flutter:
     - images/globe.png
     - images/person.png
     - images/v_logo.png
+    - images/policeman.png
+    - images/customer.png
+    - images/skills.png
+    - images/logout.png
+    - images/select.png
     - images/qr_code_2.png
     - assets/my_file.txt
    # An image asset can refer to one or more resolution-specific "variants", see

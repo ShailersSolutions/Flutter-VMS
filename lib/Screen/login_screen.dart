@@ -118,7 +118,7 @@ class InitState extends State<LoginScreen> {
                         //   },
                         // ),
                         AccessMethod(
-                          image: "images/staff.png",
+                          image: "images/policeman.png",
                           text: "Guard Access",
                           onTap: (){
                             Navigator.push(

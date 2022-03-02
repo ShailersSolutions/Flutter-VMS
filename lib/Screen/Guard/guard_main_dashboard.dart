@@ -90,7 +90,7 @@ class _GuardMainDashboardState extends State<GuardMainDashboard> {
                                       builder: (context) =>
                                           GuardMain()));
                             },
-                            image: 'images/person.png',
+                            image: 'images/skills.png',
                             text: 'Check Visitors List',
                           ),
 
@@ -145,7 +145,7 @@ class _GuardMainDashboardState extends State<GuardMainDashboard> {
                               prefs.remove('guardId');
                               Navigator.push(context, MaterialPageRoute(builder: (context) => GaurdLogin(loginType: "Guard Login",)));
                             },
-                            image: 'images/person.png',
+                            image: 'images/logout.png',
                             text: 'Guard Log Out',
                           ),
                           SizedBox(
